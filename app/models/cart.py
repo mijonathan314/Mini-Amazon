@@ -17,6 +17,17 @@ WHERE uid = :uid
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows]
+    
+    @staticmethod
+    def get_cart_items(uid):
+        rows = app.db.execute('''
+SELECT c.id, c.uid, c.pid, c.quantity, c.fulfilled, p.name, p.price, p.available
+FROM Carts c, Products p
+WHERE c.uid = :uid
+AND c.pid = p.id
+''',
+                            uid=uid)
+        return rows#[Cart(*row) for row in rows]
 
 #     @staticmethod
 #     def get_all(available=True):
