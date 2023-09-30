@@ -17,6 +17,7 @@ def cart():
         items = Cart.get(current_user.id)
     else:
         items = None
-        return jsonify({}), 404
 
-    return jsonify([item.__dict__ for item in items])
+    #return jsonify([item.__dict__ for item in items])
+    return render_template('cart.html',
+                           cart_items=items)
