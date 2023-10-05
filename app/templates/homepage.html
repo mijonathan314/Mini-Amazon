@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Your Account</h2>
+<a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">Purchases</a>
+{% endblock %}

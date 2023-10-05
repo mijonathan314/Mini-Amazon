@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Your Purchases</h2>
+<br><br>
+<!--TODO: Get the search bar to work-->
+<input type="text" id="searchInput" placeholder="Search all purchases">
+<br><br>
+<table id="purchasesTable" class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Purchase ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Time Purchased</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchase_history%}
+      <tr>
+        <td>{{purchase.id}}</td>
+        <td>{{purchase.pid}}</td>
+        <td>{{purchase.time_purchased}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
