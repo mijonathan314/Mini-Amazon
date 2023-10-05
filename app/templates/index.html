@@ -5,6 +5,7 @@
 <br><br>
 
 <h2>Products for sale:</h2>
+<a href="{{ url_for('product.get_top_products', k = 5)}}"><button>View Top K Products</button></a>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
