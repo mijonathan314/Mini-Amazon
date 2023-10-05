@@ -5,7 +5,12 @@
 <br><br>
 
 <h2>Products for sale:</h2>
-<a href="{{ url_for('product.get_top_products', k = 5)}}"><button>View Top K Products</button></a>
+<form action="{{ url_for('product.get_top_products') }}" method="post">
+  <label for="k-input">Number of top products:</label>
+  <input type="number" id="k-input" name="k-value" min="1" required>
+  <input type="submit" value="View Top K Products">
+</form>
+<br>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
