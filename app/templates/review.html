@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Your Reviews</h2>
+<br><br>
+<!--TODO: Get the search bar to work-->
+<input type="text" id="searchInput" placeholder="Search all reviews">
+<br><br>
+<table id="reviewsTable" class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Time Reviewed</th>
+      <th scope="col">Rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in review_history%}
+      <tr>
+        <td>{{review.pid}}</td>
+        <td>{{review.review_time}}</td>
+        <td>{{review.review_rating}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
