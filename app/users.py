@@ -72,3 +72,7 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+@bp.route('/homepage')
+def homepage():
+    return render_template('homepage.html')
