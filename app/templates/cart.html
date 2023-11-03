@@ -25,20 +25,24 @@
     {% endfor %}
   </tbody>
 </table>
+<br>
+
+<div id="overallSumContainer">
+  <h2>Overall Sum: $0.00</h2>
+</div>
+
+<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 <script>
     const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
     let totalPriceSum = 0;
-  
     totalPriceCells.forEach((cell) => {
       const totalPrice = parseFloat(cell.textContent);
       totalPriceSum += totalPrice;
     });
-  
-    const sumContainer = document.createElement('h2');
+    const sumContainer = document.querySelector('#overallSumContainer h2');
     sumContainer.innerHTML = `Overall Sum: $${totalPriceSum.toFixed(2)}`;
-    document.body.appendChild(sumContainer);
-  </script>
+</script>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
