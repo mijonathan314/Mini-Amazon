@@ -14,7 +14,7 @@ class Cart:
         rows = app.db.execute('''
 SELECT id, uid, pid, quantity, fulfilled, order_placed
 FROM Carts
-WHERE id = :id
+WHERE id =:id
 ''',
                               id=id)
         return [Cart(*row) for row in rows]
@@ -24,7 +24,7 @@ WHERE id = :id
         rows = app.db.execute('''
 SELECT c.id, c.uid, c.pid, c.quantity, c.fulfilled, c.order_placed, p.name, p.price, p.available
 FROM Carts c, Products p
-WHERE c.uid = :uid
+WHERE c.uid =:uid
 AND c.pid = p.id
 AND c.order_placed = False
 ''',
@@ -47,4 +47,23 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+
+    @staticmethod
+    def update_cart_item(uid, pid, new_quantity):
+        try:
+            rows = app.db.execute("""
+UPDATE Carts
+SET quantity=:new_quantity
+WHERE uid=:uid
+AND pid=:pid
+AND order_placed=False
+""",
+                                uid=uid,
+                                pid=pid,
+                                new_quantity=new_quantity)
+            id = rows[0][0]
+            return Cart.get(id)
+        except Exception as e:
+            print(str(e))
+            return None        
 

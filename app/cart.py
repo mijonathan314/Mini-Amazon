@@ -7,7 +7,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 
-from flask import Blueprint
+from flask import Blueprint, request
 bp = Blueprint('cart', __name__)
 
 @bp.route('/cart', methods=['GET'])
@@ -20,3 +20,16 @@ def cart():
 
     return render_template('cart.html',
                            cart_items=cart_items)
+
+@bp.route('/update-cart-item/<int:pid>', methods=['PATCH'])
+def update_cart_item(pid):
+    try:
+        data = request.get_json()
+        new_quantity = data.get('newQuantity')
+        if current_user.is_authenticated:
+            Cart.update_cart_item(current_user.id, pid, new_quantity)
+            return jsonify({'message': 'Update successful'}), 200
+        else:
+            return jsonify({'error': 'User not authenticated'}), 401
+    except Exception as e:
+        return jsonify({'error': 'Unexpected error'}), 500

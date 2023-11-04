@@ -18,14 +18,74 @@
     {% for item in cart_items%}
       <tr>
         <th scope="row">{{item.name}}</th>
-        <td>{{item.quantity}}</td>
-        <td>{{item.price}}</td>
-        <td>{{item.quantity * item.price}}</td>
+        <td>
+          <button class="decrement-quantity" data-item-id="{{ item.pid }}">-</button>
+          <span id="quantity-{{ item.pid }}">{{ item.quantity }}</span>
+          <button class="increment-quantity" data-item-id="{{ item.pid }}">+</button>
+        </td>
+        <td id="unit-price-{{ item.pid }}">{{ item.price }}</td>
+        <td id="total-price-{{ item.pid }}">{{item.quantity * item.price}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 <br>
+
+<!-- <script type="text/javascript" src="cartAPI.js"></script> -->
+<script>
+  document.querySelectorAll(".increment-quantity").forEach(button => {
+    button.addEventListener("click", () => {
+      const itemId = button.getAttribute("data-item-id");
+      const quantityElement = document.getElementById(`quantity-${itemId}`);
+      const currentQuantity = parseInt(quantityElement.innerText);
+      const newQuantity = currentQuantity + 1;
+      quantityElement.innerText = newQuantity;
+      const totalElement = document.getElementById(`total-price-${itemId}`);
+      const itemPriceElement = document.getElementById(`unit-price-${itemId}`);
+      const itemPrice = parseFloat(itemPriceElement.innerText);
+      console.log(itemPrice);
+      console.log(newQuantity);
+      totalElement.innerText = newQuantity * itemPrice;
+      calcTotalPrice();
+      updateCartItemQuantity(itemId, newQuantity);
+    });
+  });
+  document.querySelectorAll(".decrement-quantity").forEach(button => {
+    button.addEventListener("click", () => {
+      const itemId = button.getAttribute("data-item-id");
+      const quantityElement = document.getElementById(`quantity-${itemId}`);
+      const totalElement = document.getElementById(`total-price-${itemId}`);
+      const itemPriceElement = document.getElementById(`unit-price-${itemId}`);
+      const itemPrice = parseFloat(itemPriceElement.innerText);
+      const currentQuantity = parseInt(quantityElement.innerText);
+      if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        quantityElement.innerText = newQuantity;
+        totalElement.innerText = newQuantity * itemPrice;
+        updateCartItemQuantity(itemId, newQuantity);
+        calcTotalPrice();
+      }
+    });
+  });
+
+  function updateCartItemQuantity(itemId, newQuantity) {
+    fetch(`/update-cart-item/${itemId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ newQuantity }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+        } else {
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  }
+</script>
 
 <div id="overallSumContainer">
   <h2>Overall Sum: $0.00</h2>
@@ -34,6 +94,7 @@
 <a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 <script>
+  function calcTotalPrice() {
     const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
     let totalPriceSum = 0;
     totalPriceCells.forEach((cell) => {
@@ -42,6 +103,8 @@
     });
     const sumContainer = document.querySelector('#overallSumContainer h2');
     sumContainer.innerHTML = `Overall Sum: $${totalPriceSum.toFixed(2)}`;
+  }
+  calcTotalPrice();
 </script>
 
 {% else %}
