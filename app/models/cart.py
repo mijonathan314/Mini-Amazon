@@ -65,5 +65,21 @@ AND order_placed=False
             return Cart.get(id)
         except Exception as e:
             print(str(e))
-            return None        
+            return None   
+
+    @staticmethod
+    def delete_cart_item(uid, pid):
+        try:
+            rows = app.db.execute("""
+DELETE FROM Carts
+WHERE uid=:uid
+AND pid=:pid
+AND order_placed=False
+""",
+                                uid=uid,
+                                pid=pid)
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None             
 

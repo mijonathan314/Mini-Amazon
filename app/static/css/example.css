@@ -21,3 +21,13 @@ position: absolute;
 right: 0px;
 width: 50%;
 }
+
+td {
+    position: relative;
+}
+
+#delete-button {
+    height: 30px;
+    position: absolute;
+    right: 0;
+}

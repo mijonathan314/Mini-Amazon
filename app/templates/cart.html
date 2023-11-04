@@ -16,12 +16,13 @@
   </thead>
   <tbody>
     {% for item in cart_items%}
-      <tr>
+      <tr id="row-{{ item.pid }}">
         <th scope="row">{{item.name}}</th>
         <td>
           <button class="decrement-quantity" data-item-id="{{ item.pid }}">-</button>
           <span id="quantity-{{ item.pid }}">{{ item.quantity }}</span>
           <button class="increment-quantity" data-item-id="{{ item.pid }}">+</button>
+          <input id="delete-button" type="image" src="https://t4.ftcdn.net/jpg/03/01/07/99/360_F_301079914_TDcwbIag3uOp7dwNRWb0bqpfWeOzb6Xu.jpg" onclick="deleteItem('{{ item.pid }}')"/>
         </td>
         <td id="unit-price-{{ item.pid }}">{{ item.price }}</td>
         <td id="total-price-{{ item.pid }}">{{item.quantity * item.price}}</td>
@@ -31,7 +32,7 @@
 </table>
 <br>
 
-<!-- <script type="text/javascript" src="cartAPI.js"></script> -->
+
 <script>
   document.querySelectorAll(".increment-quantity").forEach(button => {
     button.addEventListener("click", () => {
@@ -43,8 +44,6 @@
       const totalElement = document.getElementById(`total-price-${itemId}`);
       const itemPriceElement = document.getElementById(`unit-price-${itemId}`);
       const itemPrice = parseFloat(itemPriceElement.innerText);
-      console.log(itemPrice);
-      console.log(newQuantity);
       totalElement.innerText = newQuantity * itemPrice;
       calcTotalPrice();
       updateCartItemQuantity(itemId, newQuantity);
@@ -94,6 +93,28 @@
 <a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 <script>
+  function deleteItem(itemId) {
+    fetch(`/delete-cart-item/${itemId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(response => {
+        if (response.ok) {
+          const rowToDelete = document.getElementById(`row-${itemId}`);
+          if (rowToDelete) {
+                rowToDelete.remove();
+                calcTotalPrice();
+          } else {
+                console.error("Row not found for item ID:", itemId);
+          }
+        } else {
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  }
   function calcTotalPrice() {
     const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
     let totalPriceSum = 0;

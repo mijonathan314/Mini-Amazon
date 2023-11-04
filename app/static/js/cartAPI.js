@@ -15,6 +15,6 @@ function updateCartItemQuantity(itemId, newQuantity) {
       .catch(error => {
         console.error("Error:", error);
       });
-  };
+};
 
 export { updateCartItemQuantity };

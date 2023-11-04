@@ -7,7 +7,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect, url_for
 bp = Blueprint('cart', __name__)
 
 @bp.route('/cart', methods=['GET'])
@@ -33,3 +33,15 @@ def update_cart_item(pid):
             return jsonify({'error': 'User not authenticated'}), 401
     except Exception as e:
         return jsonify({'error': 'Unexpected error'}), 500
+
+@bp.route('/delete-cart-item/<int:pid>', methods=['DELETE', 'GET'])
+def delete_cart_item(pid):
+    try:
+        if current_user.is_authenticated:
+            Cart.delete_cart_item(current_user.id, pid)
+            return jsonify({'message': 'Update successful'}), 200
+        else:
+            return jsonify({'error': 'User not authenticated'}), 401
+    except Exception as e:
+        return jsonify({'error': 'Unexpected error'}), 500
+

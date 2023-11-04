@@ -1,2 +1,11 @@
 0,0,1,2,False,False
 1,0,2,1,False,False
+2,0,3,4,False,False
+3,0,4,2,False,False
+4,0,5,8,False,False
+5,0,6,2,False,False
+6,0,7,1,False,False
+7,0,8,6,False,False
+8,0,9,5,False,False
+9,0,10,3,False,False
+10,0,11,4,False,False
