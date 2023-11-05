@@ -31,3 +31,19 @@ td {
     position: absolute;
     right: 0;
 }
+
+.pagination ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination ul li {
+    display: inline;
+    margin-right: 5px;
+}
+
+.pagination ul li a {
+    text-decoration: none;
+    padding: 5px 10px; 
+    border: 1px solid #ccc; 
+}
