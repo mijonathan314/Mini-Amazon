@@ -5,6 +5,7 @@ from faker import Faker
 num_users = 100
 num_products = 2000
 num_purchases = 2500
+num_cart_items = 30
 
 Faker.seed(0)
 fake = Faker()
@@ -41,12 +42,14 @@ def gen_products(num_products):
         for pid in range(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
+            quantity = fake.random_int(min=1, max=1000)
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 available_pids.append(pid)
-            writer.writerow([pid, name, price, available])
+            writer.writerow([pid, uid, name, price, quantity, available])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
@@ -65,7 +68,23 @@ def gen_purchases(num_purchases, available_pids):
         print(f'{num_purchases} generated')
     return
 
+def gen_cart_items(num_items, available_pids):
+    with open('Carts.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Cart Items...', end=' ', flush=True)
+        for id in range(num_items):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            #uid = fake.random_int(min=0, max=num_users-1)
+            uid = 0
+            pid = fake.random_element(elements=available_pids)
+            quantity = fake.random_int(min=1, max=20)
+            writer.writerow([id, uid, pid, quantity, False, False])
+        print(f'{num_items} generated')
+    return num_items
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
+print(available_pids)
 gen_purchases(num_purchases, available_pids)
+gen_cart_items(num_cart_items, available_pids)

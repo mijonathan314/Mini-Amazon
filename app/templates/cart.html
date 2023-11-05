@@ -22,7 +22,7 @@
           <button class="decrement-quantity" data-item-id="{{ item.pid }}">-</button>
           <span id="quantity-{{ item.pid }}">{{ item.quantity }}</span>
           <button class="increment-quantity" data-item-id="{{ item.pid }}">+</button>
-          <input id="delete-button" type="image" src="https://t4.ftcdn.net/jpg/03/01/07/99/360_F_301079914_TDcwbIag3uOp7dwNRWb0bqpfWeOzb6Xu.jpg" onclick="deleteItem('{{ item.pid }}')"/>
+          <input id="delete-button" type="image" src="https://www.freeiconspng.com/thumbs/trash-can-icon/trash-can-icon-3.png" onclick="deleteItem('{{ item.pid }}')"/>
         </td>
         <td id="unit-price-{{ item.pid }}">{{ item.price }}</td>
         <td id="total-price-{{ item.pid }}">{{item.quantity * item.price}}</td>
@@ -54,6 +54,6 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
 {% endif %}
-
+<br><br>
 <script src="static/js/cartAPI.js"></script>
 {% endblock %}
