@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Top Products</h2>
+<br><br>
+<!--TODO: Get the search bar to work-->
+<input type="text" id="searchInput" placeholder="Search all products">
+<br><br>
+<table id="productsTable" class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Product Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in top_product%}
+      <tr>
+        <td>{{product.id}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
