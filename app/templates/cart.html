@@ -49,7 +49,20 @@
   <h2>Overall Sum: $0.00</h2>
 </div>
 
-<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  Not enough inventory for the following items; please adjust quantities in cart.
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+
+<a href="{{ url_for('cart.submit_order') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>

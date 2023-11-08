@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash
 from flask_login import current_user
 import datetime
 from flask import jsonify
@@ -54,4 +54,32 @@ def delete_cart_item(pid):
             return jsonify({'error': 'User not authenticated'}), 401
     except Exception as e:
         return jsonify({'error': 'Unexpected error'}), 500
+
+@bp.route('/submit-order', methods=['GET', 'POST'])
+def submit_order():
+    try:
+        if current_user.is_authenticated:
+            #avail_balance = # TODO: grab user balance 
+            all_cart_items = Cart.get_cart_items(current_user.id)
+            total_price = 0
+            items_not_enough = []
+            for item in all_cart_items:
+                total_price += item[3] * item[7]
+                quantity_requested = item[3]
+                quantity_avail = 0
+                if quantity_requested > quantity_avail:
+                    items_not_enough.append(item[6])
+            if len(items_not_enough) > 0:
+                for i in items_not_enough:
+                    flash(i)
+                return redirect(url_for('cart.cart'))
+            # if total_price > avail_balance:
+            #     flash('Insufficient funds')
+            #     return redirect(url_for('cart.cart'))
+            
+        return redirect(url_for('cart.cart', page=1))
+    except Exception as e:
+        return jsonify({'error': 'Unexpected error'}), 500
+
+
 
