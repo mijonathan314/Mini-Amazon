@@ -5,11 +5,7 @@ from faker import Faker
 num_users = 100
 num_products = 2000
 num_purchases = 2500
-<<<<<<< HEAD
-num_cart_items = 30
-=======
 num_reviews = 1000
->>>>>>> main
 
 Faker.seed(0)
 fake = Faker()
