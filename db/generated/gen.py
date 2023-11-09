@@ -30,9 +30,13 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            writer.writerow([uid, email, password, firstname, lastname])
+            address = profile['address']
+            seller = False
+            balance = uid
+            writer.writerow([uid, email, password, firstname, lastname, address, seller, balance])
         print(f'{num_users} generated')
     return
+
 
 
 def gen_products(num_products):
@@ -81,10 +85,29 @@ def gen_purchases(num_purchases, available_pids):
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
             pid = fake.random_element(elements=available_pids)
+            quantity = fake.random_int(min=0, max=50)
+            fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
+            writer.writerow([id, uid, pid, quantity, fulfillment_status, time_purchased])
         print(f'{num_purchases} generated')
     return
+
+def gen_orders(num_purchases):
+    with open('Orders.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('orders...', end=' ', flush=True)
+        for id in range(num_purchases):
+            user_id = fake.random_int(min=0, max=num_users-1)
+            time_stamp = fake.date_time()
+            total_items = fake.random_int(min=1, max=50)
+            total_price = fake.random_int(min=0, max=10000)
+
+            writer.writerow([id, user_id, total_price, total_items, time_stamp])
+        print('generated orders')
+    return
+
+
+
 
 def gen_cart_items(num_items, available_pids):
     with open('Carts.csv', 'w') as f:
@@ -103,6 +126,7 @@ def gen_cart_items(num_items, available_pids):
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
+gen_orders(num_purchases)
 gen_purchases(num_purchases, available_pids)
 gen_cart_items(num_cart_items, available_pids)
 gen_reviews(num_reviews)
