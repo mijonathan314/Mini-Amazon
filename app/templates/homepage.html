@@ -8,5 +8,4 @@
 <a href="{{ url_for('users.profile', uid = current_user.id) }}" type="button" class="btn btn-dark">View/Update Profile</a>
 <a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">Purchase History</a>
 <a href="{{ url_for('users.balance', uid = current_user.id) }}" type="button" class="btn btn-dark">Your Balance</a>
-<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Cart</a>
 {% endblock %}

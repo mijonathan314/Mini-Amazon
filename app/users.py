@@ -89,7 +89,6 @@ def update(uid):
                         form.firstname.data,
                         form.lastname.data, 
                         form.address.data):
-            flash('Successfully Updated Profile Information')
             return redirect(url_for('users.homepage'))
     return render_template('updateProfile.html', title="Update Profile", form=form)
 
