@@ -107,8 +107,5 @@ def gen_cart_items(num_items, available_pids):
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
-<<<<<<< HEAD
 gen_cart_items(num_cart_items, available_pids)
-=======
 gen_reviews(num_reviews)
->>>>>>> main
