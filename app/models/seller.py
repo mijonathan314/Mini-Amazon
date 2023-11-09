@@ -51,7 +51,7 @@ WHERE (
     Orders.id = Purchases.id AND
     Products.user_id = Users.id AND
     Products.id = Purchases.pid AND
-    Users.id = :user_id
+    Users.id = Orders.user_id
 )
 ORDER BY Orders.time_stamp DESC
 ''',
