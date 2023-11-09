@@ -5,6 +5,8 @@
 <br><br>
 
 <h2>Your Account</h2>
+<a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">Purchases</a>
+<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Cart</a>
 <a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">View/Update Profile</a>
 <a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">Purchase History</a>
 <a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">Your Balance</a>
