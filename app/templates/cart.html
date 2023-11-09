@@ -62,7 +62,7 @@
   {% endwith %}
 </p>
 
-<a href="{{ url_for('cart.submit_order') }}" type="button" class="btn btn-dark">Submit Order</a>
+<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>

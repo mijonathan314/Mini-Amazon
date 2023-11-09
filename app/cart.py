@@ -66,7 +66,7 @@ def submit_order():
             for item in all_cart_items:
                 total_price += item[3] * item[7]
                 quantity_requested = item[3]
-                quantity_avail = 0
+                quantity_avail = 5
                 if quantity_requested > quantity_avail:
                     items_not_enough.append(item[6])
             if len(items_not_enough) > 0:
@@ -76,7 +76,9 @@ def submit_order():
             # if total_price > avail_balance:
             #     flash('Insufficient funds')
             #     return redirect(url_for('cart.cart'))
-            
+            for item in all_cart_items:
+                print(Cart.delete_cart_item(current_user.id, item[2]))
+            print(Orders.add_order(current_user.id, total_price, len(all_cart_items)))
         return redirect(url_for('cart.cart', page=1))
     except Exception as e:
         return jsonify({'error': 'Unexpected error'}), 500
