@@ -6,16 +6,18 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, firstname, lastname, balance, address):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+        self.balance = balance
+        self.address = address
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
+SELECT password, id, email, firstname, lastname, balance, address
 FROM Users
 WHERE email = :email
 """,
@@ -57,12 +59,32 @@ RETURNING id
             # the following simply prints the error to the console:
             print(str(e))
             return None
+        
+    @staticmethod
+    def update(id, email, firstname, lastname, address):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET email = :email, firstname = :firstname, lastname = :lastname, address = :address
+WHERE id = :id
+RETURNING id
+""",                              email=email,
+                                  firstname=firstname, lastname=lastname, 
+                                  address = address, 
+                                  id = id)
+            id = rows[0][0]
+            return User.get(id)
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return None
 
     @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, firstname, lastname, balance, address
 FROM Users
 WHERE id = :id
 """,
