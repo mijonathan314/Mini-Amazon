@@ -1,7 +1,7 @@
 from flask import current_app as app
 
 class Order:
-     def __init__(self, id, uid, total_price, total_items, timestamp):
+    def __init__(self, id, uid, total_price, total_items, timestamp):
         self.id = id
         self.user_id = uid
         self.total_price = total_price
