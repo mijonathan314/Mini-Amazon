@@ -22,3 +22,19 @@ def get_top_products():
         products = None
 
     return render_template('products.html', top_product=products)
+
+@bp.route('/get_by_category', methods=['POST'])
+def get_by_category():
+    category = request.form['category'].strip()  # Get the category from the form input
+    if current_user.is_authenticated and category:
+        # Call a method to get products by category, you need to implement it in the Product model
+        filtered_products = Product.get_by_category(category)
+    else:
+        filtered_products = []
+
+    # Render the same products page or a specific category page with the filtered products
+    return render_template('products.html', top_product=filtered_products)
+
+
+
+

@@ -15,7 +15,8 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     quantity INT NOT NULL,
-    available BOOLEAN DEFAULT TRUE
+    available BOOLEAN DEFAULT TRUE,
+    category VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Purchases (
