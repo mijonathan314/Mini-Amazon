@@ -11,12 +11,22 @@
   <input type="submit" value="View Top K Products">
 </form>
 <br>
+
+<form action="{{ url_for('product.get_by_category') }}" method="post">
+  <label for="category-input">Filter by category:</label>
+  <input type="text" id="category-input" name="category" placeholder="Enter category" required>
+  <input type="submit" value="Filter">
+</form>
+<br>
+
+
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Product Category</th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +35,8 @@
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+        <td>{{product.category}}</td>
+
       </tr>
     {% endfor %}
   </tbody>

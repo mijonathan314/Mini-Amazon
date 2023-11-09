@@ -53,6 +53,17 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
+class UpdateProfileForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired()])
+    submit = SubmitField('Update Information')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -69,6 +80,17 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
+@bp.route('/update/<int:uid>', methods=['GET', 'POST'])
+def update(uid):
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if User.update(uid,
+                        form.email.data,
+                        form.firstname.data,
+                        form.lastname.data, 
+                        form.address.data):
+            return redirect(url_for('users.homepage'))
+    return render_template('updateProfile.html', title="Update Profile", form=form)
 
 @bp.route('/logout')
 def logout():
@@ -78,3 +100,11 @@ def logout():
 @bp.route('/homepage')
 def homepage():
     return render_template('homepage.html')
+
+@bp.route('/profile/<int:uid>')
+def profile(uid):
+    return render_template('profile.html')
+
+@bp.route('/balance/<int:uid>')
+def balance(uid):
+    return render_template('balance.html')
