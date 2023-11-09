@@ -16,32 +16,57 @@
   </thead>
   <tbody>
     {% for item in cart_items%}
-      <tr>
+      <tr id="row-{{ item.pid }}">
         <th scope="row">{{item.name}}</th>
-        <td>{{item.quantity}}</td>
-        <td>{{item.price}}</td>
-        <td>{{item.quantity * item.price}}</td>
+        <td>
+          <button class="decrement-quantity" data-item-id="{{ item.pid }}">-</button>
+          <span id="quantity-{{ item.pid }}">{{ item.quantity }}</span>
+          <button class="increment-quantity" data-item-id="{{ item.pid }}">+</button>
+          <input id="delete-button" type="image" src="https://www.freeiconspng.com/thumbs/trash-can-icon/trash-can-icon-3.png" onclick="deleteItem('{{ item.pid }}')"/>
+        </td>
+        <td id="unit-price-{{ item.pid }}">{{ item.price }}</td>
+        <td id="total-price-{{ item.pid }}">{{item.quantity * item.price}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+<br>
+<div class="pagination">
+  <ul>
+      {% if page > 1 %}
+          <li><a href="{{ url_for('cart.cart', page=page-1) }}">Previous</a></li>
+      {% endif %}
+      {% for p in range(1, total_pages + 1) %}
+          <li {% if page == p %} class="active"{% endif %}><a href="{{ url_for('cart.cart', page=p) }}">{{ p }}</a></li>
+      {% endfor %}
+      {% if page < total_pages %}
+          <li><a href="{{ url_for('cart.cart', page=page+1) }}">Next</a></li>
+      {% endif %}
+  </ul>
+</div>
 
-<script>
-    const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
-    let totalPriceSum = 0;
-  
-    totalPriceCells.forEach((cell) => {
-      const totalPrice = parseFloat(cell.textContent);
-      totalPriceSum += totalPrice;
-    });
-  
-    const sumContainer = document.createElement('h2');
-    sumContainer.innerHTML = `Overall Sum: $${totalPriceSum.toFixed(2)}`;
-    document.body.appendChild(sumContainer);
-  </script>
+<div id="overallSumContainer">
+  <h2>Overall Sum: $0.00</h2>
+</div>
+
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  Not enough inventory for the following items; please adjust quantities in cart.
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+
+<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
 {% endif %}
-
+<br><br>
+<script src="static/js/cartAPI.js"></script>
 {% endblock %}
