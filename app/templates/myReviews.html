@@ -13,16 +13,25 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product ID</th>
+      <th scope="col">Date</th>
       <th scope="col">Rating</th>
       <th scope="col">Review</th>
+      <th scope="col">Edit Review</th>
+      <th scope="col">Delete Review</th>
+      
     </tr>
   </thead>
   <tbody>
     {% for review in review_history%}
       <tr>
         <td>{{review.pid}}</td>
-        <td>{{review.review_time}}</td>
+        <td>{{review.review}}</td>
+        <!--Add another column for the actual text review peepeepoo-->
         <td>{{review.review_rating}}</td>
+        <td>{{review.review_time}}</td>
+        <td><a type="button" href="{{ url_for('reviews.init_edit_review_by_uid_pid', uid = current_user.id, pid = review.pid) }}">Edit Review</a></td>
+        <td><a type="button" href="{{ url_for('reviews.delete_review_by_uid_pid', uid = current_user.id, pid = review.pid) }}">Delete Review</a></td>
+       
       </tr>
     {% endfor %}
   </tbody>

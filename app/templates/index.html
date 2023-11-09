@@ -51,6 +51,8 @@
       <th scope="col">Purchase ID</th>
       <th scope="col">Product ID</th>
       <th scope="col">Time Purchased</th>
+      <th scope="col">Leave Review Hello</th>
+      
     </tr>
   </thead>
   <tbody>
@@ -59,6 +61,7 @@
         <th scope="row">{{purchase.id}}</th>
         <td>{{purchase.pid}}</td>
         <td>{{purchase.time_purchased}}</td>
+        <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
       </tr>
     {% endfor %}
   </tbody>

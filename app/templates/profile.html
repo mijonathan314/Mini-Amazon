@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h1>{{current_user.firstname}} {{current_user.lastname}}</h1><br/>
+<p style="font-size:18px"><b>Account Number: </b> {{current_user.id}}</p>
+<p style="font-size:18px"><b>Email: </b> {{current_user.email}}</p>
+<p style="font-size:18px"><b>Address: </b> {{current_user.address}}</p>
+<br/><br/><br/>
+<a href="{{ url_for('users.update', uid = current_user.id) }}" type="button" class="btn btn-dark">Update Information</a>
+{% endblock %}
