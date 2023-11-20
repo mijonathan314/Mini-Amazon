@@ -46,7 +46,8 @@ CREATE TABLE Carts (
     pid INT NOT NULL REFERENCES Products(id),
     quantity INT NOT NULL CHECK(quantity >= 0),
     fulfilled BOOLEAN NOT NULL DEFAULT FALSE,
-    order_placed BOOLEAN NOT NULL DEFAULT FALSE
+    order_placed BOOLEAN NOT NULL DEFAULT FALSE,
+    order_time timestamp without time zone DEFAULT NULL
 );
 
 CREATE TABLE Reviews(

@@ -49,20 +49,25 @@
   <h2>Overall Sum: $0.00</h2>
 </div>
 
-<p>
+<p id="bottom">
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-  Not enough inventory for the following items; please adjust quantities in cart.
+  <!-- Not enough inventory for the following items; please adjust quantities in cart. -->
   <ul>
     {% for message in messages %}
-    <li>{{ message }}</li>
+    <li style="color:red">{{ message }}</li>
     {% endfor %}
   </ul>
   {% endif %}
   {% endwith %}
+  <script>
+    window.onload = function() {
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+  </script>
 </p>
 
-<a href="{{ url_for('cart.cart') }}" type="button" class="btn btn-dark">Submit Order</a>
+<a href="{{ url_for('cart.submit_order') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>

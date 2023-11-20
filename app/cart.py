@@ -59,7 +59,7 @@ def delete_cart_item(pid):
 def submit_order():
     try:
         if current_user.is_authenticated:
-            #avail_balance = # TODO: grab user balance 
+            avail_balance = current_user.balance
             all_cart_items = Cart.get_cart_items(current_user.id)
             total_price = 0
             items_not_enough = []
@@ -70,15 +70,17 @@ def submit_order():
                 if quantity_requested > quantity_avail:
                     items_not_enough.append(item[6])
             if len(items_not_enough) > 0:
+                flash('Not enough inventory for the following items; please adjust quantities in cart:')
                 for i in items_not_enough:
                     flash(i)
                 return redirect(url_for('cart.cart'))
-            # if total_price > avail_balance:
-            #     flash('Insufficient funds')
-            #     return redirect(url_for('cart.cart'))
+            if total_price > avail_balance:
+                flash('Insufficient funds; check your balance')
+                return redirect(url_for('cart.cart'))
             for item in all_cart_items:
-                print(Cart.delete_cart_item(current_user.id, item[2]))
-            print(Orders.add_order(current_user.id, total_price, len(all_cart_items)))
+                Cart.submit_cart_item(current_user.id, item[2]) #TODO: write this endpoint to make order_placed = T and timestamp it
+                #print(Cart.delete_cart_item(current_user.id, item[2]))
+            #print(Orders.add_order(current_user.id, total_price, len(all_cart_items)))
         return redirect(url_for('cart.cart', page=1))
     except Exception as e:
         return jsonify({'error': 'Unexpected error'}), 500

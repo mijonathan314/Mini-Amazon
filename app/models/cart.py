@@ -81,5 +81,23 @@ AND order_placed=False
             return rows
         except Exception as e:
             print(str(e))
-            return None             
+            return None     
+
+    @staticmethod
+    def submit_cart_item(uid, pid):
+        try:
+            rows = app.db.execute("""
+UPDATE Carts
+SET order_placed=True, order_time=CURRENT_TIMESTAMP
+WHERE uid=:uid
+AND pid=:pid
+AND order_placed=False
+""",
+                                uid=uid,
+                                pid=pid)
+            id = rows[0][0]
+            return Cart.get(id)
+        except Exception as e:
+            print(str(e))
+            return None   
 
