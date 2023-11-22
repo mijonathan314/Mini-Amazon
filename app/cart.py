@@ -22,6 +22,9 @@ def cart():
         # get the items on the current page
         cart_items = all_cart_items[start_idx:end_idx]
         total_pages = (len(all_cart_items) + items_per_page - 1) // items_per_page
+        total_price = 0
+        for item in all_cart_items:
+            total_price += item[3]*item[7]
 
     else:
         cart_items = None
@@ -29,7 +32,7 @@ def cart():
         total_pages = None
 
     return render_template('cart.html',
-                           cart_items=cart_items, page=page, total_pages=total_pages)
+                           cart_items=cart_items, page=page, total_pages=total_pages, total_price=total_price)
 
 @bp.route('/update-cart-item/<int:pid>', methods=['PATCH'])
 def update_cart_item(pid):
@@ -66,7 +69,7 @@ def submit_order():
             for item in all_cart_items:
                 total_price += item[3] * item[7]
                 quantity_requested = item[3]
-                quantity_avail = 5
+                quantity_avail = 5 #TODO: fix this using inventory table
                 if quantity_requested > quantity_avail:
                     items_not_enough.append(item[6])
             if len(items_not_enough) > 0:
@@ -77,8 +80,9 @@ def submit_order():
             if total_price > avail_balance:
                 flash('Insufficient funds; check your balance')
                 return redirect(url_for('cart.cart'))
+            now = datetime.datetime.now()
             for item in all_cart_items:
-                Cart.submit_cart_item(current_user.id, item[2]) #TODO: write this endpoint to make order_placed = T and timestamp it
+                Cart.submit_cart_item(current_user.id, item[2], now, item[3]) 
                 #print(Cart.delete_cart_item(current_user.id, item[2]))
             #print(Orders.add_order(current_user.id, total_price, len(all_cart_items)))
         return redirect(url_for('cart.cart', page=1))

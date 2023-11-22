@@ -1,4 +1,5 @@
 from flask import current_app as app
+import datetime
 
 class Cart:
     def __init__(self, id, uid, pid, quantity, fulfilled, order_placed):
@@ -84,17 +85,24 @@ AND order_placed=False
             return None     
 
     @staticmethod
-    def submit_cart_item(uid, pid):
+    def submit_cart_item(uid, pid, order_time, quantity):
         try:
             rows = app.db.execute("""
 UPDATE Carts
-SET order_placed=True, order_time=CURRENT_TIMESTAMP
+SET order_placed=True, order_time=:time
 WHERE uid=:uid
 AND pid=:pid
-AND order_placed=False
+AND order_placed=False;
+
+INSERT INTO Purchases(uid, pid, quantity, fulfillment_status, time_purchased)
+VALUES(:uid, :pid, :quantity, :fulfillment_status, :time)
+RETURNING id
 """,
                                 uid=uid,
-                                pid=pid)
+                                pid=pid,
+                                time=order_time,
+                                quantity=quantity,
+                                fulfillment_status="ordered")
             id = rows[0][0]
             return Cart.get(id)
         except Exception as e:
