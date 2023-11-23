@@ -49,10 +49,10 @@
   <h2 id="overallSumValue">Overall Sum: ${{ total_price }}</h2>
 </div>
 
+<!-- TODO: make the messages nicer looking, if possible -->
 <p id="bottom">
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-  <!-- Not enough inventory for the following items; please adjust quantities in cart. -->
   <ul>
     {% for message in messages %}
     <li style="color:red">{{ message }}</li>

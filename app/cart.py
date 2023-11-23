@@ -67,6 +67,9 @@ def submit_order():
             total_price = 0
             items_not_enough = []
             items_unavailable = []
+            if len(all_cart_items) == 0:
+                flash('No items in cart')
+                return redirect(url_for('cart.cart'))
             for item in all_cart_items:
                 quantity_requested = item[3]
                 unit_price = item[7]
@@ -92,10 +95,15 @@ def submit_order():
                 flash('Insufficient funds; check your balance')
                 return redirect(url_for('cart.cart'))
             now = datetime.datetime.now()
+            order_items = all_cart_items
             for item in all_cart_items:
-                Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7]) 
-        return redirect(url_for('cart.cart', page=1)) #TODO: make this render template for orders page
+               Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7]) 
+        else:
+            order_items = None
+        return render_template('orders.html',
+                           order_items=order_items)
     except Exception as e:
+        print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500
 
 
