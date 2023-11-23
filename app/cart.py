@@ -97,11 +97,12 @@ def submit_order():
             now = datetime.datetime.now()
             order_items = all_cart_items
             for item in all_cart_items:
-               Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7]) 
+               Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number) 
         else:
             order_items = None
-        return render_template('orders.html',
-                           order_items=order_items)
+        return redirect(url_for('cart.cart'))
+        # return render_template('orders.html',
+        #                    order_items=order_items)
     except Exception as e:
         print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500

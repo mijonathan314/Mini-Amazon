@@ -9,7 +9,8 @@ CREATE TABLE Users (
     lastname VARCHAR(255) NOT NULL,
      address VARCHAR NOT NULL,
     seller BOOLEAN DEFAULT FALSE,
-    balance REAL DEFAULT 0 CHECK(balance >= 0) NOT NULL
+    balance REAL DEFAULT 0 CHECK(balance >= 0) NOT NULL,
+    order_number INT DEFAULT 0 CHECK(order_number >= 0) NOT NULL
 );
 
 
@@ -38,7 +39,9 @@ CREATE TABLE if not exists Purchases (
     pid INT NOT NULL REFERENCES Products(id),
     quantity INT NOT NULL CHECK(quantity >= 0),
     fulfillment_status VARCHAR NOT NULL CHECK(fulfillment_status in ('ordered', 'shipped', 'delivered')),
-    time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    order_id INT NOT NULL 
+    -- Limitation: can't check that oid is real
 );
 
 CREATE TABLE Carts (

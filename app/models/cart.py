@@ -85,8 +85,8 @@ AND order_placed=False
             return None     
 
     @staticmethod
-    def submit_cart_item(uid, pid, order_time, quantity, price):
-        try:
+    def submit_cart_item(uid, pid, order_time, quantity, price, oid): #TODO: can prob delete rows from Carts bc it's in Purchases
+        try: #TODO: figure out increment order_id, rn it increments too much (per item, not per order)
             rows = app.db.execute("""
 UPDATE Carts
 SET order_placed=True, order_time=:time
@@ -94,27 +94,32 @@ WHERE uid=:uid
 AND pid=:pid
 AND order_placed=False;
 
-INSERT INTO Purchases(uid, pid, quantity, fulfillment_status, time_purchased)
-VALUES(:uid, :pid, :quantity, :fulfillment_status, :time)
+INSERT INTO Purchases(uid, pid, quantity, fulfillment_status, time_purchased, order_id)
+VALUES(:uid, :pid, :quantity, :fulfillment_status, :time, :oid)
 RETURNING id;
 
 UPDATE Users
-SET balance=balance-:price
+SET balance=balance-:price, order_number=order_number+1
 WHERE id=:uid;
 
 UPDATE Products
 SET quantity=quantity-:quantity
+WHERE id=:pid;
 """,
                                 uid=uid,
                                 pid=pid,
                                 time=order_time,
                                 quantity=quantity,
                                 fulfillment_status="ordered",
-                                price=price*quantity)
+                                price=price*quantity,
+                                oid=oid)
                                 #TODO: move the stuff into their respective files
             id = rows[0][0]
             return Cart.get(id)
         except Exception as e:
             print(str(e))
             return None   
+    
+    # @staticmethod
+    # def order_details(uid, oid)
 
