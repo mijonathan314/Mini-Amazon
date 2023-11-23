@@ -61,9 +61,7 @@ function deleteItem(itemId) {
       if (response.ok) {
         const rowToDelete = document.getElementById(`row-${itemId}`);
         if (rowToDelete) {
-              //console.log(rowToDelete)
               const totalElement = document.getElementById(`total-price-${itemId}`).innerHTML;
-              console.log(totalElement);
               rowToDelete.remove();
               calcTotalPrice(totalElement);
         } else {
@@ -84,14 +82,3 @@ function calcTotalPrice(amountToDelete) {
   const sumContainer = document.querySelector('#overallSumContainer h2');
   sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
 }
-// function calcTotalPrice() {
-//   const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
-//   let totalPriceSum = 0;
-//   totalPriceCells.forEach((cell) => {
-//     const totalPrice = parseFloat(cell.textContent);
-//     totalPriceSum += totalPrice;
-//   });
-//   const sumContainer = document.querySelector('#overallSumContainer h2');
-//   sumContainer.innerHTML = `Overall Sum: $${totalPriceSum.toFixed(2)}`;
-// }
-//calcTotalPrice();

@@ -85,7 +85,7 @@ AND order_placed=False
             return None     
 
     @staticmethod
-    def submit_cart_item(uid, pid, order_time, quantity):
+    def submit_cart_item(uid, pid, order_time, quantity, price):
         try:
             rows = app.db.execute("""
 UPDATE Carts
@@ -96,13 +96,22 @@ AND order_placed=False;
 
 INSERT INTO Purchases(uid, pid, quantity, fulfillment_status, time_purchased)
 VALUES(:uid, :pid, :quantity, :fulfillment_status, :time)
-RETURNING id
+RETURNING id;
+
+UPDATE Users
+SET balance=balance-:price
+WHERE id=:uid;
+
+UPDATE Products
+SET quantity=quantity-:quantity
 """,
                                 uid=uid,
                                 pid=pid,
                                 time=order_time,
                                 quantity=quantity,
-                                fulfillment_status="ordered")
+                                fulfillment_status="ordered",
+                                price=price*quantity)
+                                #TODO: move the stuff into their respective files
             id = rows[0][0]
             return Cart.get(id)
         except Exception as e:
