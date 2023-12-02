@@ -51,7 +51,7 @@ WHERE (
     Orders.id = Purchases.id AND
     Products.user_id = Users.id AND
     Products.id = Purchases.pid AND
-    Users.id = :user_id
+    Users.id = Orders.user_id
 )
 ORDER BY Orders.time_stamp DESC
 ''',
@@ -69,14 +69,15 @@ WHERE id = :order_id AND product_id = :product_id
         return [Fulfillment(*row) for row in rows]
 
 class moreProduct:
-    def __init__(self, user_id, name, price, quantity):
+    def __init__(self, user_id, name, price, quantity, category):
         self.user_id = user_id #from orders, this is the BUYER
         self.name = name #from orders and purchases
         self.price = price #from purchases
         self.quantity = quantity #from orders 
+        self.categpry = category
 
     @staticmethod
-    def add_product(user_id, name,  price, quantity):
+    def add_product(user_id, name,  price, quantity, category):
         try:
             quantity = int(quantity)
         except Exception as e:
@@ -99,12 +100,12 @@ WHERE Users.id = :uid
                                 uid=user_id)
 
             app.db.execute("""
-INSERT INTO Products(user_id, name, price, quantity, available)
-VALUES(:uid, :name,  :price, :quantity, True)
+INSERT INTO Products(user_id, name, price, quantity, available, category)
+VALUES(:uid, :name,  :price, :quantity, True, :category)
 RETURNING id
 """,
                                 uid=user_id,  name=name,  price=price,
-                                 quantity=quantity)
+                                 quantity=quantity, category=category)
 
             
 

@@ -72,6 +72,7 @@ class AddInventoryForm(FlaskForm):
     name = StringField('Item Name', validators=[DataRequired()])
     price = StringField('Price', validators=[DataRequired()])
     quantity = StringField('Quantity', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])
     submit = SubmitField('Register Item')
 
 @bp.route('/addinventory', methods=['GET', 'POST'])
@@ -83,7 +84,8 @@ def addinventory():
             ret = moreProduct.add_product(user.id,
                         form.name.data.strip(), 
                         form.price.data.strip(),
-                        form.quantity.data.strip()
+                        form.quantity.data.strip(),
+                        form.category.data.strip()
                         )
             if ret is not None:
                 flash('Inventory Information Updated')
