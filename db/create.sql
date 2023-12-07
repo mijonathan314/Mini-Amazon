@@ -9,7 +9,7 @@ CREATE TABLE Users (
     lastname VARCHAR(255) NOT NULL,
      address VARCHAR NOT NULL,
     seller BOOLEAN DEFAULT FALSE,
-    balance REAL DEFAULT 0 CHECK(balance >= 0) NOT NULL,
+    balance DECIMAL(12,2) DEFAULT 0 CHECK(balance >= 0) NOT NULL,
     order_number INT DEFAULT 0 CHECK(order_number >= 0) NOT NULL
 );
 
