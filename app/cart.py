@@ -97,12 +97,15 @@ def submit_order():
             now = datetime.datetime.now()
             order_items = all_cart_items
             for item in all_cart_items:
-               Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number) 
+                try:
+                    Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number, item[9]) 
+                except Exception as e:
+                    return jsonify({'error': 'Unexpected error'}), 500
         else:
             order_items = None
         # return redirect(url_for('cart.cart'))
         return render_template('orders.html',
-                           order_items=order_items)
+                           order_items=order_items, fulfillment=False)
     except Exception as e:
         print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500
@@ -112,11 +115,14 @@ def order_detail(oid):
     try:
         if current_user.is_authenticated:
             order_items = Purchase.get_all_by_oid(oid, current_user.id)
-            print(order_items)
+            all_fulfilled = True
+            for item in order_items:
+                if item[4] == 'ordered':
+                    all_fulfilled = False
+                    break
         else:
             order_items = None
-        return render_template('orders.html',
-        order_items=order_items)
+        return render_template('orders.html', order_items=order_items, fulfillment=all_fulfilled)
     except Exception as e:
         print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500

@@ -50,7 +50,7 @@ CREATE TABLE Carts (
     uid INT NOT NULL REFERENCES Users(id),
     pid INT NOT NULL REFERENCES Products(id),
     quantity INT NOT NULL CHECK(quantity >= 0),
-    fulfilled BOOLEAN NOT NULL DEFAULT FALSE,
+    fulfilled BOOLEAN NOT NULL DEFAULT FALSE, --TODO: get rid of this
     order_placed BOOLEAN NOT NULL DEFAULT FALSE,
     order_time timestamp without time zone DEFAULT NULL
 );

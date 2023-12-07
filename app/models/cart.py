@@ -23,7 +23,7 @@ WHERE id =:id
     @staticmethod
     def get_cart_items(uid):
         rows = app.db.execute('''
-SELECT c.id, c.uid, c.pid, c.quantity, c.fulfilled, c.order_placed, p.name, p.price, p.available
+SELECT c.id, c.uid, c.pid, c.quantity, c.fulfilled, c.order_placed, p.name, p.price, p.available, p.user_id
 FROM Carts c, Products p
 WHERE c.uid =:uid
 AND c.pid = p.id
@@ -85,7 +85,7 @@ AND order_placed=False
             return None     
 
     @staticmethod
-    def submit_cart_item(uid, pid, order_time, quantity, price, oid): #TODO: can prob delete rows from Carts bc it's in Purchases
+    def submit_cart_item(uid, pid, order_time, quantity, price, oid, seller_id): #TODO: can prob delete rows from Carts bc it's in Purchases
         try: #TODO: figure out increment order_id, rn it increments too much (per item, not per order)
             rows = app.db.execute("""
 UPDATE Carts
@@ -102,6 +102,10 @@ UPDATE Users
 SET balance=balance-:price, order_number=order_number+1
 WHERE id=:uid;
 
+UPDATE Users
+SET balance=balance+:price
+WHERE id=:seller_id;
+
 UPDATE Products
 SET quantity=quantity-:quantity
 WHERE id=:pid;
@@ -113,7 +117,8 @@ WHERE id=:pid;
                                 fulfillment_status="ordered",
                                 unit_price=price,
                                 price=price*quantity,
-                                oid=oid)
+                                oid=oid,
+                                seller_id=seller_id)
                                 #TODO: move the stuff into their respective files
             id = rows[0][0]
             return Cart.get(id)
