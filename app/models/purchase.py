@@ -25,7 +25,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT id, uid, pid, quantity, price, fulfillment_status, time_purchased, order_id
 FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
