@@ -92,11 +92,16 @@ class CurrencyField(DecimalField):
                     self.data = quantized
             except (decimal.InvalidOperation, ValueError):
                 self.data = None
-                raise ValueError(self.gettext('Not a valid decimal value'))
-        
-class AddFundsForm(FlaskForm):
+                raise ValueError(self.gettext('Not a valid decimal value')) 
+
+class AddWithdrawFundsForm(FlaskForm):
     CURRENCY_FIELD_LABEL = 'Amount (automatically rounds to the nearest cent)'
-    amount = CurrencyField(CURRENCY_FIELD_LABEL, validators=[DataRequired(), NumberRange(0, float('inf'))])
+
+    def __init__(self, max_value=float('inf'), *args, **kwargs):
+        super(AddWithdrawFundsForm, self).__init__(*args, **kwargs)
+        self.amount.validators = [DataRequired(), NumberRange(0, max_value)]
+
+    amount = CurrencyField(CURRENCY_FIELD_LABEL)
     submit = SubmitField('Submit')
 
 
@@ -146,13 +151,19 @@ def balance(uid):
 
 @bp.route('/balance/<int:uid>/add', methods=['GET', 'POST'])
 def add_funds(uid):
-    form = AddFundsForm()
+    form = AddWithdrawFundsForm()
     if form.validate_on_submit():
         if User.add_funds(uid,
                         form.amount.data):
             return redirect(url_for('users.balance', uid = uid))
     return render_template('addFunds.html', title = "Add Funds", form = form)
 
-@bp.route('/balance/<int:uid>/withdraw')
+@bp.route('/balance/<int:uid>/withdraw', methods=['GET', 'POST'])
 def withdraw_funds(uid):
-    return render_template('withdrawFunds.html')
+    balance = User.get_balance(uid)
+    form = AddWithdrawFundsForm(max_value = balance)
+    if form.validate_on_submit():
+        if User.withdraw_funds(uid,
+                        form.amount.data):
+            return redirect(url_for('users.balance', uid = uid))
+    return render_template('withdrawFunds.html', title = "Withdraw Funds", form = form)
