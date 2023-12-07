@@ -6,6 +6,7 @@ from flask import jsonify
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
+from .models.order import Order
 
 from flask import Blueprint, request, redirect, url_for
 bp = Blueprint('cart', __name__)
@@ -101,6 +102,7 @@ def submit_order():
                     Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number, item[9]) 
                 except Exception as e:
                     return jsonify({'error': 'Unexpected error'}), 500
+            Order.add_order(current_user.order_number, current_user.id, total_price, len(all_cart_items), now)
         else:
             order_items = None
         # return redirect(url_for('cart.cart'))

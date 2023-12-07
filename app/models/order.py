@@ -19,12 +19,24 @@ WHERE id =:id
         return [Order(*row) for row in rows]
     
     @staticmethod
-    def add_order(user_id, total_price, total_items):
+    def add_order(id, user_id, total_price, total_items, timestamp):
         rows = app.db.execute('''
-INSERT INTO Orders(user_id, total_price, total_items)
-VALUES (:user_id, :total_price, :total_items)
+INSERT INTO Orders(id, user_id, total_price, total_items, time_stamp)
+VALUES (:id, :user_id, :total_price, :total_items, :timestamp)
 RETURNING id
 ''',
+                                id = id,
                                 user_id = user_id,
                                 total_price = total_price,
-                                total_items = total_items)
+                                total_items = total_items,
+                                timestamp=timestamp)
+    
+    @staticmethod
+    def get_by_uid(uid):
+        rows = app.db.execute('''
+SELECT *
+FROM Orders
+WHERE user_id =:uid
+''',
+                                uid=uid)
+        return rows
