@@ -6,6 +6,7 @@ from flask import jsonify
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
+from .models.order import Order
 
 from flask import Blueprint, request, redirect, url_for
 bp = Blueprint('cart', __name__)
@@ -22,6 +23,9 @@ def cart():
         # get the items on the current page
         cart_items = all_cart_items[start_idx:end_idx]
         total_pages = (len(all_cart_items) + items_per_page - 1) // items_per_page
+        total_price = 0
+        for item in all_cart_items:
+            total_price += item[3]*item[7]
 
     else:
         cart_items = None
@@ -29,7 +33,7 @@ def cart():
         total_pages = None
 
     return render_template('cart.html',
-                           cart_items=cart_items, page=page, total_pages=total_pages)
+                           cart_items=cart_items, page=page, total_pages=total_pages, total_price=total_price)
 
 @bp.route('/update-cart-item/<int:pid>', methods=['PATCH'])
 def update_cart_item(pid):
@@ -59,29 +63,68 @@ def delete_cart_item(pid):
 def submit_order():
     try:
         if current_user.is_authenticated:
-            #avail_balance = # TODO: grab user balance 
+            avail_balance = current_user.balance
             all_cart_items = Cart.get_cart_items(current_user.id)
             total_price = 0
             items_not_enough = []
+            items_unavailable = []
+            if len(all_cart_items) == 0:
+                flash('No items in cart')
+                return redirect(url_for('cart.cart'))
             for item in all_cart_items:
-                total_price += item[3] * item[7]
                 quantity_requested = item[3]
-                quantity_avail = 5
-                if quantity_requested > quantity_avail:
-                    items_not_enough.append(item[6])
+                unit_price = item[7]
+                total_price += quantity_requested * unit_price
+                prod_id = item[2]
+                prod_name = item[6]
+                prod_details = Product.get(prod_id) 
+                if not prod_details.available:
+                    items_unavailable.append(prod_name)
+                    continue
+                if prod_details.quantity < quantity_requested:
+                    items_not_enough.append(prod_name)
+            if len(items_unavailable) > 0:
+                flash('The following item(s) are unavailable; please take them out of your cart:')
+                for i in items_unavailable:
+                    flash(i)
             if len(items_not_enough) > 0:
+                flash('Not enough inventory for the following items; please adjust quantities in cart:')
                 for i in items_not_enough:
                     flash(i)
                 return redirect(url_for('cart.cart'))
-            # if total_price > avail_balance:
-            #     flash('Insufficient funds')
-            #     return redirect(url_for('cart.cart'))
+            if total_price > avail_balance:
+                flash('Insufficient funds; check your balance')
+                return redirect(url_for('cart.cart'))
+            now = datetime.datetime.now()
+            order_items = all_cart_items
             for item in all_cart_items:
-                print(Cart.delete_cart_item(current_user.id, item[2]))
-            print(Orders.add_order(current_user.id, total_price, len(all_cart_items)))
-        return redirect(url_for('cart.cart', page=1))
+                try:
+                    Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number, item[9]) 
+                except Exception as e:
+                    return jsonify({'error': 'Unexpected error'}), 500
+            Order.add_order(current_user.order_number, current_user.id, total_price, len(all_cart_items), now)
+        else:
+            order_items = None
+        # return redirect(url_for('cart.cart'))
+        return render_template('orders.html',
+                           order_items=order_items, fulfillment=False)
     except Exception as e:
+        print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500
 
-
-
+@bp.route('/order/<int:oid>', methods=['GET'])
+def order_detail(oid):
+    try:
+        if current_user.is_authenticated:
+            order_items = Purchase.get_all_by_oid(oid, current_user.id)
+            all_fulfilled = True
+            for item in order_items:
+                if item[4] == 'ordered':
+                    all_fulfilled = False
+                    break
+        else:
+            order_items = None
+        return render_template('orders.html', order_items=order_items, fulfillment=all_fulfilled)
+    except Exception as e:
+        print(f"Error rendering template: {e}")
+        return jsonify({'error': 'Unexpected error'}), 500

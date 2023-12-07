@@ -9,7 +9,7 @@ document.querySelectorAll(".increment-quantity").forEach(button => {
     const itemPriceElement = document.getElementById(`unit-price-${itemId}`);
     const itemPrice = parseFloat(itemPriceElement.innerText);
     totalElement.innerText = newQuantity * itemPrice;
-    calcTotalPrice();
+    calcTotalPrice(-itemPrice);
     updateCartItemQuantity(itemId, newQuantity);
   });
 });
@@ -27,7 +27,7 @@ document.querySelectorAll(".decrement-quantity").forEach(button => {
       quantityElement.innerText = newQuantity;
       totalElement.innerText = newQuantity * itemPrice;
       updateCartItemQuantity(itemId, newQuantity);
-      calcTotalPrice();
+      calcTotalPrice(itemPrice);
     }
   });
 });
@@ -61,8 +61,9 @@ function deleteItem(itemId) {
       if (response.ok) {
         const rowToDelete = document.getElementById(`row-${itemId}`);
         if (rowToDelete) {
+              const totalElement = document.getElementById(`total-price-${itemId}`).innerHTML;
               rowToDelete.remove();
-              calcTotalPrice();
+              calcTotalPrice(totalElement);
         } else {
               console.error("Row not found for item ID:", itemId);
         }
@@ -74,14 +75,10 @@ function deleteItem(itemId) {
     });
 }
 
-function calcTotalPrice() {
-  const totalPriceCells = document.querySelectorAll('td:nth-child(4)');
-  let totalPriceSum = 0;
-  totalPriceCells.forEach((cell) => {
-    const totalPrice = parseFloat(cell.textContent);
-    totalPriceSum += totalPrice;
-  });
+function calcTotalPrice(amountToDelete) {
+  const prevPriceArray = document.querySelector('#overallSumContainer h2').innerHTML
+  const prevPrice = prevPriceArray.split(" ")[2].substring(1)
+  let newPrice = prevPrice - amountToDelete;
   const sumContainer = document.querySelector('#overallSumContainer h2');
-  sumContainer.innerHTML = `Overall Sum: $${totalPriceSum.toFixed(2)}`;
+  sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
 }
-calcTotalPrice();

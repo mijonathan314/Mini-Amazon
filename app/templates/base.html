@@ -55,6 +55,9 @@
         <div class="dropdown">
           <a style="margin-right: 10px;" href="{{ url_for('users.homepage') }}" class="btn btn-light">Hello {{current_user.firstname}}!</a>
           <div class="dropdown-options">
+            <a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}">Purchase History</a>
+            <a href="{{ url_for('users.balance', uid = current_user.id) }}">Your Balance</a>
+            <a href="{{ url_for('users.profile', uid = current_user.id) }}">View/Update Profile</a>
             <a href="{{ url_for('users.logout') }}">Log out</a>
           </div>
         </div>

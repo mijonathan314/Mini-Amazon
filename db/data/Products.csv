@@ -1,6 +1,11 @@
 1,0,vanilla ice cream,2.99,2,true,food
 2,0,chocolate ice cream,2.99,2,true,food
-3,0,strawberry ice cream,2.99,2,true,animal
+3,0,strawberry ice cream,2.99,2,false,animal
 4,0,6-pack of paycheck pilsners,11.49,2,true,animal
 5,0,seven fabergé easter eggs,1199000.00,2,true,tool
 6,0,painting - the storm on the sea of galilee,44000000.00,2,true,tool
+7,0,jacket,19.99,2,true,clothing
+8,0,pillow,8.99,2,true,tool
+9,0,pen,2.99,2,true,tool
+10,0,hat,5.99,2,true,clothing
+11,0,iPad,599.99,2,true,tool

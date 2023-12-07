@@ -3,6 +3,7 @@ from flask_login import current_user
 import datetime
 
 from .models.purchase import Purchase
+from .models.order import Order
 
 from flask import Blueprint
 bp = Blueprint('purchases', __name__)
@@ -13,6 +14,7 @@ def get_purchases_by_uid(uid):
     # find the products the user has purchased given uid
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid(uid)
+        orders = Order.get_by_uid(uid)
     else:
         purchases = None
-    return render_template('purchases.html', purchase_history=purchases)
+    return render_template('purchases.html', purchase_history=orders)

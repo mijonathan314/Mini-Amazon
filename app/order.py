@@ -9,7 +9,7 @@ from .models.cart import Cart
 from .models.order import Order
 
 from flask import Blueprint, request, redirect, url_for
-bp = Blueprint('cart', __name__)
+bp = Blueprint('order', __name__)
 
 # @bp.route('/add-order', methods=['GET', 'POST'])
 # def add_order():
