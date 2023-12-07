@@ -94,8 +94,8 @@ WHERE uid=:uid
 AND pid=:pid
 AND order_placed=False;
 
-INSERT INTO Purchases(uid, pid, quantity, fulfillment_status, time_purchased, order_id)
-VALUES(:uid, :pid, :quantity, :fulfillment_status, :time, :oid)
+INSERT INTO Purchases(uid, pid, quantity, price, fulfillment_status, time_purchased, order_id)
+VALUES(:uid, :pid, :quantity, :unit_price, :fulfillment_status, :time, :oid)
 RETURNING id;
 
 UPDATE Users
@@ -111,6 +111,7 @@ WHERE id=:pid;
                                 time=order_time,
                                 quantity=quantity,
                                 fulfillment_status="ordered",
+                                unit_price=price,
                                 price=price*quantity,
                                 oid=oid)
                                 #TODO: move the stuff into their respective files

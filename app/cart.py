@@ -100,12 +100,23 @@ def submit_order():
                Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number) 
         else:
             order_items = None
-        return redirect(url_for('cart.cart'))
-        # return render_template('orders.html',
-        #                    order_items=order_items)
+        # return redirect(url_for('cart.cart'))
+        return render_template('orders.html',
+                           order_items=order_items)
     except Exception as e:
         print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500
 
-
-
+@bp.route('/order/<int:oid>', methods=['GET'])
+def order_detail(oid):
+    try:
+        if current_user.is_authenticated:
+            order_items = Purchase.get_all_by_oid(oid, current_user.id)
+            print(order_items)
+        else:
+            order_items = None
+        return render_template('orders.html',
+        order_items=order_items)
+    except Exception as e:
+        print(f"Error rendering template: {e}")
+        return jsonify({'error': 'Unexpected error'}), 500

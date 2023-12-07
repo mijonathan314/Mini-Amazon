@@ -38,6 +38,7 @@ CREATE TABLE if not exists Purchases (
     uid INT NOT NULL REFERENCES Users(id),
     pid INT NOT NULL REFERENCES Products(id),
     quantity INT NOT NULL CHECK(quantity >= 0),
+    price REAL NOT NULL CHECK(price >= 0),
     fulfillment_status VARCHAR NOT NULL CHECK(fulfillment_status in ('ordered', 'shipped', 'delivered')),
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     order_id INT NOT NULL 
