@@ -90,3 +90,19 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def add_funds(id, amount):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET balance = balance + :amount
+WHERE id = :id
+RETURNING ID
+""",                              amount = amount,
+                                  id = id)
+            id = rows[0][0]
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
