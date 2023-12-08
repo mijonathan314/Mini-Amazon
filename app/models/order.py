@@ -37,6 +37,7 @@ RETURNING id
 SELECT *
 FROM Orders
 WHERE user_id =:uid
+ORDER BY time_stamp DESC
 ''',
                                 uid=uid)
         return rows

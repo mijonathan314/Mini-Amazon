@@ -105,7 +105,6 @@ def submit_order():
             Order.add_order(current_user.order_number, current_user.id, total_price, len(all_cart_items), now)
         else:
             order_items = None
-        # return redirect(url_for('cart.cart'))
         return render_template('orders.html',
                            order_items=order_items, fulfillment=False)
     except Exception as e:
