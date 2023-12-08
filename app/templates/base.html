@@ -62,6 +62,7 @@
           </div>
         </div>
         <a style="margin-right: 10px;" href="{{ url_for('cart.cart') }}" type="button" class="btn btn-light">Cart</a>
+        <a style="margin-right: 10px;" href="{{ url_for('inventory.seller') }}" type="button" class="btn btn-light">Inventory</a>
         {% else %}
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
         {% endif %}
