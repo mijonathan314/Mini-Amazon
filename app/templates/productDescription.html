@@ -1,0 +1,21 @@
+<h1>{{ product.name }}</h1>
+
+<!-- You can add more product details here if needed -->
+
+<h2>Sellers:</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Seller Name</th>
+            <th>Quantity in Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for seller in sellers %}
+        <tr>
+            <td>{{ seller.firstname }}</td>
+            <td>{{ seller.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

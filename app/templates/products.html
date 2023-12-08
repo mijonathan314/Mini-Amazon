@@ -4,7 +4,7 @@
 
 <br><br>
 
-<h2>Top Products</h2>
+<h2>Products</h2>
 <br><br>
 <!--TODO: Get the search bar to work-->
 <input type="text" id="searchInput" placeholder="Search all products">
@@ -16,6 +16,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Product Price</th>
       <th scope="col">Product Category</th>
+      <th scope="col">Product Description</th>
 
     </tr>
   </thead>
@@ -23,9 +24,10 @@
     {% for product in top_product%}
       <tr>
         <td>{{product.id}}</td>
-        <td>{{product.name}}</td>
+        <td><a href="{{ url_for('product.product_detail', product_id=product.id) }}">{{ product.name }}</a></td>
         <td>{{product.price}}</td>
         <td>{{product.category}}</td>
+        <td>{{product.description}}</td>
       </tr>
     {% endfor %}
   </tbody>

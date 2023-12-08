@@ -1,11 +1,11 @@
-1,0,vanilla ice cream,2.99,2,true,food
-2,0,chocolate ice cream,2.99,2,true,food
-3,0,strawberry ice cream,2.99,2,false,animal
-4,0,6-pack of paycheck pilsners,11.49,2,true,animal
-5,0,seven fabergé easter eggs,1199000.00,2,true,tool
-6,0,painting - the storm on the sea of galilee,44000000.00,2,true,tool
-7,0,jacket,19.99,2,true,clothing
-8,0,pillow,8.99,2,true,tool
-9,0,pen,2.99,2,true,tool
-10,0,hat,5.99,2,true,clothing
-11,0,iPad,599.99,2,true,tool
+1,0,vanilla ice cream,2.99,2,true,food, This vanilla ice cream is truly delicious.
+2,0,chocolate ice cream,2.99,2,true,food, This chocolate ice cream is bad.
+3,0,strawberry ice cream,2.99,2,false,animal, This strawberry ice cream is mid.
+4,0,6-pack of paycheck pilsners,11.49,2,true,animal, This paycheck doesn't work.
+5,0,seven fabergé easter eggs,1199000.00,2,true,tool, These eggs are value.
+6,0,painting - the storm on the sea of galilee,44000000.00,2,true,tool, The best painting ever.
+7,0,jacket,19.99,2,true,clothing, I love this jacket.
+8,0,pillow,8.99,2,true,tool, So soft.
+9,0,pen,2.99,2,true,tool, Pen is great.
+10,0,hat,5.99,2,true,clothing, Hat is so good.
+11,0,iPad,599.99,2,true,tool, iPad is him.

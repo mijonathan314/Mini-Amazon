@@ -56,7 +56,8 @@ def gen_products(num_products):
             if available == 'true':
                 available_pids.append(pid)
             category = fake.sentence(nb_words=1)[:-1]
-            writer.writerow([pid, uid, name, price, quantity, available, category])
+            description = fake.sentence(nb_words=30)[:-1]
+            writer.writerow([pid, uid, name, price, quantity, available, category, description])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
