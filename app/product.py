@@ -35,6 +35,12 @@ def get_by_category():
     # Render the same products page or a specific category page with the filtered products
     return render_template('products.html', top_product=filtered_products)
 
+@bp.route('/product/<int:product_id>')
+def product_detail(product_id):
+    product = Product.get(product_id)
+    sellers = Product.get_product_sellers(product_id)
+    return render_template('productDescription.html', product=product, sellers=sellers)
+
 
 
 
