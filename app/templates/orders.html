@@ -23,7 +23,7 @@
         <td id="quantity-{{ item.pid }}">{{ item.quantity }}</td>
         <td id="unit-price-{{ item.pid }}">{{ item.price }}</td>
         <td id="total-price-{{ item.pid }}">{{item.quantity * item.price}}</td>
-        <td id="fulfillment-{{ item.pid }}">{{item.fulfillment_status}}</td>
+        <td id="fulfillment-{{ item.pid }}">{{item.fulfillment_status}} on {{item.time_fulfillment_updated.strftime("%b %d, %Y")}}</td>
       </tr>
     {% endfor %}
   </tbody>

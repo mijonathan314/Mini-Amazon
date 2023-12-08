@@ -10,6 +10,8 @@ from .models.user import User
 from .models.product import Product
 from .models.seller import Inventory, Fulfillment, moreProduct, Popular, Sales
 
+import datetime
+
 from flask import Blueprint
 bp = Blueprint('inventory', __name__)
 
@@ -58,13 +60,13 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, bu
             ''', user_id = user_id, product_id = product_id, price= price)
             return redirect(url_for('inventory.seller'))
         if action == 'edit':
-            print("CHECKME", buyer_id, order_id)
+            now = datetime.datetime.now()
             app.db.execute('''
             UPDATE Purchases
-            SET fulfillment_status = :fulfillment_status
+            SET fulfillment_status = :fulfillment_status, time_fulfillment_updated=:now
             WHERE pid = :product_id
             AND uid =:buyer_id
-            ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id, buyer_id=buyer_id)
+            ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id, buyer_id=buyer_id, now=now)
             return redirect(url_for('inventory.seller'))
 
 

@@ -92,8 +92,9 @@ def gen_purchases(num_purchases, available_pids):
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
             time_purchased = fake.date_time()
+            time_fulfillment_updated = fake.date_time()
             order_id = fake.random_int(min=0, max=num_purchases)
-            writer.writerow([id, uid, pid, quantity, price, fulfillment_status, time_purchased, order_id])
+            writer.writerow([id, uid, pid, quantity, price, fulfillment_status, time_purchased, time_fulfillment_updated, order_id])
         print(f'{num_purchases} generated')
     return
 
