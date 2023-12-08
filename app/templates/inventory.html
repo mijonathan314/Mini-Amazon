@@ -59,6 +59,8 @@
 		{% endfor %}
 	</tbody>
 </table>
+<h2>Most Popular Item: {% for pop in popular %}{{pop.name}}{% endfor %}</h2>
+<h2>Total Orders Fulfilled:{% for sale in sales %}{{sale.count}}{% endfor %}</h2>
 <h2>Order Fulfillments:</h2>
 <table class='table table-hover table-bordered container'>
 	<thead class="thead-dark">
