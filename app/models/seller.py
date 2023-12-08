@@ -29,7 +29,44 @@ WHERE user_id = :user_id AND product_id = :id
 ''',
                               user_id =user_id, product_id = product_id)
         return redirect(url_for('inventory.seller'))
-    
+class Sales:
+    def __init__(self, count):
+        self.count = count   
+
+    @staticmethod
+    def get_total_sales(user_id):
+        rows = app.db.execute('''
+SELECT COUNT(DISTINCT Orders.id) AS num_orders
+FROM Orders, Products, Purchases, Users
+WHERE (
+    Products.user_id = Users.id AND
+    Products.id = Purchases.pid AND
+    Users.id = Orders.user_id                    
+)
+                              ''',
+                              user_id = user_id)
+        return [Sales(*row) for row in rows] 
+class Popular:
+    def __init__(self, user_id, name):
+        self.user_id = user_id
+        self.name = name  
+
+    @staticmethod
+    def get_most_popular_by_user(user_id):
+        rows = app.db.execute('''
+SELECT Users.id, Products.name
+FROM Orders, Products, Purchases, Users
+WHERE (
+    Products.user_id = Users.id AND
+    Products.id = Purchases.pid AND
+    Users.id = Orders.user_id                    
+)
+GROUP BY Users.id, Products.name
+ORDER BY COUNT(*) DESC
+LIMIT 1
+                              ''',
+                              user_id = user_id)
+        return [Popular(*row) for row in rows] 
 class Fulfillment:
     def __init__(self, user_id, order_id, address,name, fulfillment_status, time_stamp, total_items, product_id):
         self.user_id = user_id #from orders, this is the BUYER
@@ -48,7 +85,6 @@ class Fulfillment:
 SELECT Orders.user_id, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
 FROM Orders, Products, Purchases, Users
 WHERE (
-    Orders.id = Purchases.id AND
     Products.user_id = Users.id AND
     Products.id = Purchases.pid AND
     Users.id = Orders.user_id
@@ -63,7 +99,7 @@ ORDER BY Orders.time_stamp DESC
         rows = app.db.execute('''
 UPDATE Purchases
 SET fulfillment_status = :fulfillment_status
-WHERE id = :order_id AND product_id = :product_id
+WHERE order_id = :order_id AND product_id = :product_id
 ''',
                               order_id = order_id, fulfillment_status = fulfillment_status)
         return [Fulfillment(*row) for row in rows]
