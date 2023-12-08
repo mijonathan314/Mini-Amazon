@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1><b>Summary</b></h1> 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <table id="summary_stats" class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Average Rating</th>
+                <th scope="col">Number of Reviews</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{my_avg}}</td>
+                <td>{{my_num}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Top Reviews</h2>
+    <table id="top_review_table" class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Review</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Time Added</th>
+                <th scope="col">Image</th>
+                <th scope="col">Likes</th>
+                <th scope="col">Dislikes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in top_three_reviews %}
+                <tr id="row-{{ review.id }}">
+                    <td>{{ review.review }}</td>
+                    <td>{{ review.review_rating }}</td>
+                    <td>{{ review.review_time }}</td>
+                    {% if review.imagepath != "" %}
+                    <td>
+                        <img src="{{review.imagepath|safe}}" alt="Review Image" style="max-width: 200px; max-height: 200px;">
+                    </td>
+                    {% else %}
+                        <td>No Image</td>
+                    {% endif %}
+                    {% if review.liked %}
+                        <td>
+                            <button class="fa fa-thumbs-up fa-3x like active" style="font-size:24px" id="like-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-likes-{{ review.id }}"> {{ review.thumbs_up }} </span>
+                        </td>
+                    {% else %}
+                        <td>
+                            <button class="fa fa-thumbs-up fa-3x like" style="font-size:24px" id="like-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-likes-{{ review.id }}"> {{ review.thumbs_up }} </span>
+                        </td>
+                    {% endif %}
+                    {% if review.disliked %}
+                        <td>
+                            <button class="fa fa-thumbs-down fa-3x like active" style="font-size:24px" id="dislike-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-dislikes-{{ review.id }}"> {{ review.thumbs_down }} </span>
+                        </td>
+                    {% else %}
+                        <td>
+                            <button class="fa fa-thumbs-down fa-3x like" style="font-size:24px" id="dislike-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-dislikes-{{ review.id }}"> {{ review.thumbs_down }} </span>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Other Reviews</h3>
+    <table id="prod_review_table" class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Review</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Time Added</th>
+                <th scope="col">Image</th>
+                <th scope="col">Likes</th>
+                <th scope="col">Dislikes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in prod_reviews %}
+                <tr id="row-{{ review.id }}">
+                    <td>{{ review.review }}</td>
+                    <td>{{ review.review_rating }}</td>
+                    <td>{{ review.review_time }}</td>
+                    {% if review.imagepath != "" %}
+                    <td>
+                        <img src="{{review.imagepath|safe}}" alt="Review Image" style="max-width: 200px; max-height: 200px;">
+                    </td>
+                    {% else %}
+                        <td>No Image</td>
+                    {% endif %}
+                    {% if review.liked %}
+                        <td>
+                            <button class="fa fa-thumbs-up fa-3x like active" style="font-size:24px" id="like-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-likes-{{ review.id }}"> {{ review.thumbs_up }} </span>
+                        </td>
+                    {% else %}
+                        <td>
+                            <button class="fa fa-thumbs-up fa-3x like" style="font-size:24px" id="like-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-likes-{{ review.id }}"> {{ review.thumbs_up }} </span>
+                        </td>
+                    {% endif %}
+                    {% if review.disliked %}
+                        <td>
+                            <button class="fa fa-thumbs-down fa-3x like active" style="font-size:24px" id="dislike-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-dislikes-{{ review.id }}"> {{ review.thumbs_down }} </span>
+                        </td>
+                    {% else %}
+                        <td>
+                            <button class="fa fa-thumbs-down fa-3x like" style="font-size:24px" id="dislike-{{ review.id }}" review-id="{{ review.id }}"></button>
+                            <span id="num-dislikes-{{ review.id }}"> {{ review.thumbs_down }} </span>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+            document.querySelectorAll(".fa-thumbs-up").forEach(button => {
+            button.addEventListener("click", () => {
+            const reviewId = button.getAttribute("review-id")
+            const numLikesElement = document.getElementById(`num-likes-${reviewId}`);
+            let numLikes = parseInt(numLikesElement.innerText);
+            const numDislikesElement = document.getElementById(`num-dislikes-${reviewId}`);
+            let numDislikes = parseInt(numDislikesElement.innerText);
+
+            //0 is dislike
+            //1 is like
+            //2 is neither
+            let userFeedback = -1
+            if (button.classList.contains("active")) {
+                button.classList.remove("active")
+                numLikes -= 1
+                userFeedback = 2
+            } else {
+                button.classList.add("active")
+                numLikes += 1
+                const dislike = document.getElementById(`dislike-${reviewId}`)
+                if (dislike.classList.contains("active")) {
+                    dislike.classList.remove("active")
+                    numDislikes -= 1
+                }
+                userFeedback = 1
+            }
+            console.log("numLikes", numLikes)
+            console.log("numDislikes", numDislikes)
+            numLikesElement.innerHTML = numLikes;
+            numDislikesElement.innerHTML = numDislikes;
+            console.log("userFeedback", userFeedback)
+            update_feedback(reviewId, numLikes, numDislikes, userFeedback);
+            // calcTotalPrice();
+            // updateCartItemQuantity(itemId, newQuantity);
+    });
+  });
+
+            document.querySelectorAll(".fa-thumbs-down").forEach(button => {
+                button.addEventListener("click", () => {
+                    const reviewId = button.getAttribute("review-id")
+                    const numDislikesElement = document.getElementById(`num-dislikes-${reviewId}`); //gets the span
+                    let numDislikes = parseInt(numDislikesElement.innerText);
+                    const numLikesElement = document.getElementById(`num-likes-${reviewId}`);
+                    let numLikes = parseInt(numLikesElement.innerText);
+
+                    //0 is dislike
+                    //1 is like
+                    //2 is neither
+                    let userFeedback = -1
+                    if (button.classList.contains("active")) {
+                        button.classList.remove("active")
+                        numDislikes -= 1
+                        userFeedback = 2
+                    } else {
+                        button.classList.add("active")
+                        numDislikes += 1
+                        const like = document.getElementById(`like-${reviewId}`)
+                        if (like.classList.contains("active")) {
+                            like.classList.remove("active")
+                            numLikes -= 1
+                        }
+                        userFeedback = 0
+                    }
+
+                    console.log("numLikes", numLikes)
+                    console.log("numDislikes", numDislikes)
+                    numLikesElement.innerHTML = numLikes;
+                    numDislikesElement.innerHTML = numDislikes;
+
+                    console.log("userFeedback", userFeedback)
+                    update_feedback(reviewId, numLikes, numDislikes, userFeedback);
+
+                    // updateCartItemQuantity(itemId, newQuantity);
+            });
+  });
+
+  function update_feedback(reviewID, numLikes, numDislikes, userFeedback) {
+    fetch(`/summaryRatingProd/${reviewID}/${numLikes}/${numDislikes}/${userFeedback}`, {
+      method: "PATCH",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+
+        } else {
+            console.error(response.status, response.statusText)
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+};
+    </script>
+{% endblock %}
