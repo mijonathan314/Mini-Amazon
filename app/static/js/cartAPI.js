@@ -82,3 +82,30 @@ function calcTotalPrice(amountToDelete) {
   const sumContainer = document.querySelector('#overallSumContainer h2');
   sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
 }
+
+var discountCodes = {
+  "TAKE25": 0.75,
+  "DISCOUNT50":0.5,
+}
+
+function verifyDiscountCode() {
+  var discountCode = document.getElementById('discount-input').value;
+  var messageElement = document.getElementById('message');
+
+  if (isValidDiscountCode(discountCode)) {
+      messageElement.textContent = 'Discount successfully applied!';
+      messageElement.className = 'success';
+      const prevPriceArray = document.querySelector('#overallSumContainer h2').innerHTML
+      const prevPrice = prevPriceArray.split(" ")[2].substring(1)
+      let newPrice = prevPrice*discountCodes[discountCode]
+      const sumContainer = document.querySelector('#overallSumContainer h2');
+      sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
+  } else {
+      messageElement.textContent = 'Invalid code';
+      messageElement.className = 'error';
+  }
+}
+
+function isValidDiscountCode(code) {
+  return discountCodes.hasOwnProperty(code);
+}

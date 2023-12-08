@@ -72,3 +72,16 @@ td {
 }
 
 .dropdown:hover .dropdown-options {display: block;}
+
+#message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}

@@ -67,6 +67,13 @@
   </script>
 </p>
 
+<form id="discount-form">
+  <label for="discount-input">Discount Code:</label>
+  <input type="text" id="discount-input" placeholder="Enter discount code" required>
+  <button type="button" id="add-code-btn" class="btn btn-dark" onclick="verifyDiscountCode()">Add Code</button>
+  <div id="message"></div>
+</form>
+
 <a href="{{ url_for('cart.submit_order') }}" type="button" class="btn btn-dark">Submit Order</a>
 
 {% else %}

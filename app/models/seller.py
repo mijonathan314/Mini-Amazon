@@ -48,7 +48,6 @@ class Fulfillment:
 SELECT Orders.user_id, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
 FROM Orders, Products, Purchases, Users
 WHERE (
-    Orders.id = Purchases.id AND
     Products.user_id = Users.id AND
     Products.id = Purchases.pid AND
     Users.id = Orders.user_id
