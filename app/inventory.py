@@ -8,7 +8,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.product import Product
-from .models.seller import Inventory, Fulfillment, moreProduct
+from .models.seller import Inventory, Fulfillment, moreProduct, Popular, Sales
 
 from flask import Blueprint
 bp = Blueprint('inventory', __name__)
@@ -22,9 +22,13 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, qu
     if current_user.is_authenticated:
         inventory = Inventory.get_all_inventories_by_user(current_user.id)
         fulfillment = Fulfillment.get_all_fulfillment_by_user(current_user.id)
+        popular = Popular.get_most_popular_by_user(current_user.id)
+        sales = Sales.get_total_sales(current_user.id)
     else:
         inventory = None
         fulfillment = None
+        popular = None
+        sales = None
     if request.method == "POST":
         if action == 'delete':
             app.db.execute(''' 
@@ -57,7 +61,7 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, qu
             app.db.execute('''
             UPDATE Purchases
             SET fulfillment_status = :fulfillment_status
-            WHERE id = :order_id AND pid = :product_id
+            WHERE pid = :product_id
             ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id)
             return redirect(url_for('inventory.seller'))
 
@@ -66,7 +70,9 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, qu
     print("newThing")
     return render_template('inventory.html',
                            purchase_history=fulfillment,
-                           all_products = inventory)
+                           all_products = inventory,
+                           popular = popular,
+                           sales = sales)
 
 class AddInventoryForm(FlaskForm):
     name = StringField('Item Name', validators=[DataRequired()])
