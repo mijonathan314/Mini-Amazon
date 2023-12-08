@@ -33,7 +33,8 @@ def gen_users(num_users):
             address = profile['address']
             seller = False
             balance = uid
-            writer.writerow([uid, email, password, firstname, lastname, address, seller, balance])
+            order_number = 0
+            writer.writerow([uid, email, password, firstname, lastname, address, seller, balance, order_number])
         print(f'{num_users} generated')
     return
 
@@ -87,9 +88,11 @@ def gen_purchases(num_purchases, available_pids):
             uid = fake.random_int(min=0, max=num_users-1)
             pid = fake.random_element(elements=available_pids)
             quantity = fake.random_int(min=0, max=50)
+            price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, quantity, fulfillment_status, time_purchased])
+            order_id = fake.random_int(min=0, max=num_purchases)
+            writer.writerow([id, uid, pid, quantity, price, fulfillment_status, time_purchased, order_id])
         print(f'{num_purchases} generated')
     return
 
@@ -121,7 +124,8 @@ def gen_cart_items(num_items, available_pids):
             uid = 0
             pid = fake.random_element(elements=available_pids)
             quantity = fake.random_int(min=1, max=20)
-            writer.writerow([id, uid, pid, quantity, False, False])
+            order_time = fake.date_time()
+            writer.writerow([id, uid, pid, quantity, False, False, order_time])
         print(f'{num_items} generated')
     return num_items
 
