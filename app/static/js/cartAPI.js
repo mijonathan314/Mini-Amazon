@@ -88,24 +88,52 @@ var discountCodes = {
   "DISCOUNT50":0.5,
 }
 
-function verifyDiscountCode() {
-  var discountCode = document.getElementById('discount-input').value;
-  var messageElement = document.getElementById('message');
+function isValidDiscountCode(code) {
+  return discountCodes.hasOwnProperty(code);
+}
 
-  if (isValidDiscountCode(discountCode)) {
-      messageElement.textContent = 'Discount successfully applied!';
-      messageElement.className = 'success';
-      const prevPriceArray = document.querySelector('#overallSumContainer h2').innerHTML
-      const prevPrice = prevPriceArray.split(" ")[2].substring(1)
-      let newPrice = prevPrice*discountCodes[discountCode]
-      const sumContainer = document.querySelector('#overallSumContainer h2');
-      sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
-  } else {
-      messageElement.textContent = 'Invalid code';
-      messageElement.className = 'error';
+function applyVerifyDiscount() {
+  var discountCodeInput = document.getElementById('discountCode');
+  var appliedCodeContainer = document.getElementById('appliedCodeContainer');
+  var appliedCode = document.getElementById('appliedCode');
+  var applyVerifyButton = document.getElementById('applyVerifyButton');
+  var messageElement = document.getElementById('message');
+  var code = discountCodeInput.value.trim();
+
+  if (code !== '') {
+      if (isValidDiscountCode(code)) {
+        messageElement.textContent = 'Discount successfully applied!';
+        messageElement.className = 'success';
+        const prevPriceArray = document.querySelector('#overallSumContainer h2').innerHTML
+        const prevPrice = prevPriceArray.split(" ")[2].substring(1)
+        let newPrice = prevPrice*discountCodes[code]
+        const sumContainer = document.querySelector('#overallSumContainer h2');
+        sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
+        appliedCode.textContent = 'Applied Code: ' + code;
+        appliedCodeContainer.style.display = 'block';
+        applyVerifyButton.disabled = true;
+    } else {
+        messageElement.textContent = 'Invalid code';
+        messageElement.className = 'error';
+    }
   }
 }
 
-function isValidDiscountCode(code) {
-  return discountCodes.hasOwnProperty(code);
+function removeDiscount() {
+  var appliedCodeContainer = document.getElementById('appliedCodeContainer');
+  var appliedCode = document.getElementById('appliedCode');
+  var applyVerifyButton = document.getElementById('applyVerifyButton');
+
+  const prevPriceArray = document.querySelector('#overallSumContainer h2').innerHTML
+  const prevPrice = prevPriceArray.split(" ")[2].substring(1)
+  const code = appliedCode.innerHTML.split(" ")[2]
+  let newPrice = prevPrice/discountCodes[code]
+  const sumContainer = document.querySelector('#overallSumContainer h2');
+  sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
+  var messageElement = document.getElementById('message');
+  messageElement.textContent = '';
+
+  appliedCode.textContent = '';
+  appliedCodeContainer.style.display = 'none';
+  applyVerifyButton.disabled = false;
 }

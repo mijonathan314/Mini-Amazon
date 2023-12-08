@@ -85,3 +85,12 @@ td {
 .error {
     color: red;
 }
+
+#appliedCodeContainer {
+    display: none;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+}
+#appliedCodeContainer p {
+    display: inline-block; /* Make the paragraph and button appear inline */
+    margin: 0; /* Remove default margin to avoid extra space */
+}

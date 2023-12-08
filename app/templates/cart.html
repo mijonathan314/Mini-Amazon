@@ -67,12 +67,14 @@
   </script>
 </p>
 
-<form id="discount-form">
-  <label for="discount-input">Discount Code:</label>
-  <input type="text" id="discount-input" placeholder="Enter discount code" required>
-  <button type="button" id="add-code-btn" class="btn btn-dark" onclick="verifyDiscountCode()">Add Code</button>
-  <div id="message"></div>
-</form>
+<label for="discountCode">Discount Code:</label>
+        <input type="text" id="discountCode" placeholder="Enter code">
+        <button onclick="applyVerifyDiscount()" id="applyVerifyButton" class="btn btn-dark">Apply/Verify</button>
+        <div id="message"></div>
+        <div id="appliedCodeContainer">
+            <p id="appliedCode"></p>
+            <button onclick="removeDiscount()">X</button>
+        </div>
 
 <a href="{{ url_for('cart.submit_order') }}" type="button" class="btn btn-dark">Submit Order</a>
 
