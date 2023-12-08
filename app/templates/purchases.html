@@ -16,10 +16,6 @@
       <th scope="col">Number of Items</th>
       <th scope="col">Date Purchased</th>
       <th scope="col">Order Details</th>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product ID</th>
-      <th scope="col">Time Purchased</th>
-      <th scope="col">Add Review</th>
     </tr>
   </thead>
   <tbody>
@@ -31,10 +27,6 @@
         <td>         
           <a href="{{url_for('cart.order_detail', oid=purchase.id)}}" class="btn btn-primary">View Details</a>
         </td>
-        <td>{{purchase.id}}</td>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
-        <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td> 
       </tr>
     {% endfor %}
   </tbody>
