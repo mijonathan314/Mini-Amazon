@@ -21,7 +21,7 @@
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
-        <td>{{purchase.total_price}}</td>
+        <td>{{purchase.total_price | round(2)}}</td>
         <td>{{purchase.total_items}}</td>
         <td>{{ purchase.time_stamp.strftime("%b %d, %Y") }}</td>
         <td>         

@@ -16,8 +16,8 @@ bp = Blueprint('inventory', __name__)
 
 @bp.route('/seller', methods=['GET'])
 @bp.route('/seller/<action>/<user_id>/<product_id>', methods=['GET', 'POST'])
-@bp.route('/seller/<action>/<user_id>/<product_id>/<order_id>', methods=['GET', 'POST'])
-def seller(action = None, user_id = None, product_id = None, order_id = None, quantity = 1, price = None):
+@bp.route('/seller/<action>/<user_id>/<product_id>/<order_id>/<buyer_id>', methods=['GET', 'POST'])
+def seller(action = None, user_id = None, product_id = None, order_id = None, buyer_id = None, quantity = 1, price = None):
     # get all available products for sale:
     if current_user.is_authenticated:
         inventory = Inventory.get_all_inventories_by_user(current_user.id)
@@ -58,11 +58,13 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, qu
             ''', user_id = user_id, product_id = product_id, price= price)
             return redirect(url_for('inventory.seller'))
         if action == 'edit':
+            print("CHECKME", buyer_id, order_id)
             app.db.execute('''
             UPDATE Purchases
             SET fulfillment_status = :fulfillment_status
             WHERE pid = :product_id
-            ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id)
+            AND uid =:buyer_id
+            ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id, buyer_id=buyer_id)
             return redirect(url_for('inventory.seller'))
 
 
