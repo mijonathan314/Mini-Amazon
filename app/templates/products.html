@@ -16,6 +16,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Product Price</th>
       <th scope="col">Product Category</th>
+      <th scope="col">Review Summary</th>
 
     </tr>
   </thead>
@@ -26,6 +27,8 @@
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
         <td>{{product.category}}</td>
+        <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
+
       </tr>
     {% endfor %}
   </tbody>

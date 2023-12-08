@@ -50,3 +50,4 @@ WHERE available = :available
     ''',
                             category=category, available=available)
         return [Product(*row) for row in rows]
+    
