@@ -82,11 +82,12 @@ AND order_placed=False
             return rows
         except Exception as e:
             print(str(e))
-            return None     
+            return None   
 
     @staticmethod
-    def submit_cart_item(uid, pid, order_time, quantity, price, oid, seller_id): #TODO: can prob delete rows from Carts bc it's in Purchases
-        try: #TODO: figure out increment order_id, rn it increments too much (per item, not per order)
+    def submit_cart_item(uid, pid, order_time, quantity, price, oid, seller_id, discount_pct): #TODO: can prob delete rows from Carts bc it's in Purchases
+        print("DISCOUNT", discount_pct)
+        try: 
             rows = app.db.execute("""
 UPDATE Carts
 SET order_placed=True, order_time=:time
@@ -95,15 +96,15 @@ AND pid=:pid
 AND order_placed=False;
 
 INSERT INTO Purchases(uid, pid, quantity, price, fulfillment_status, time_purchased, order_id)
-VALUES(:uid, :pid, :quantity, :unit_price, :fulfillment_status, :time, :oid)
+VALUES(:uid, :pid, :quantity, (:unit_price*:discount_pct), :fulfillment_status, :time, :oid)
 RETURNING id;
 
 UPDATE Users
-SET balance=balance-:price, order_number=order_number+1
+SET balance=balance-(:price*:discount_pct), order_number=order_number+1
 WHERE id=:uid;
 
 UPDATE Users
-SET balance=balance+:price
+SET balance=balance+(:price*:discount_pct)
 WHERE id=:seller_id;
 
 UPDATE Products
@@ -118,14 +119,12 @@ WHERE id=:pid;
                                 unit_price=price,
                                 price=price*quantity,
                                 oid=oid,
-                                seller_id=seller_id)
+                                seller_id=seller_id,
+                                discount_pct=discount_pct)
                                 #TODO: move the stuff into their respective files
             id = rows[0][0]
             return Cart.get(id)
         except Exception as e:
             print(str(e))
             return None   
-    
-    # @staticmethod
-    # def order_details(uid, oid)
 

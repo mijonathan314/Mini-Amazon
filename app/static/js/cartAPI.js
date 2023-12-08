@@ -92,6 +92,25 @@ function isValidDiscountCode(code) {
   return discountCodes.hasOwnProperty(code);
 }
 
+function updateDiscountPercentage(pct) {
+  fetch('/process-discount', {
+    method: 'POST',
+    body: JSON.stringify({ pct }),
+    headers: {
+        "Content-Type": "application/json",
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+      } else {
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+
 function applyVerifyDiscount() {
   var discountCodeInput = document.getElementById('discountCode');
   var appliedCodeContainer = document.getElementById('appliedCodeContainer');
@@ -112,6 +131,7 @@ function applyVerifyDiscount() {
         appliedCode.textContent = 'Applied Code: ' + code;
         appliedCodeContainer.style.display = 'block';
         applyVerifyButton.disabled = true;
+        updateDiscountPercentage(discountCodes[code])
     } else {
         messageElement.textContent = 'Invalid code';
         messageElement.className = 'error';
@@ -132,7 +152,7 @@ function removeDiscount() {
   sumContainer.innerHTML = `Overall Sum: $${newPrice.toFixed(2)}`;
   var messageElement = document.getElementById('message');
   messageElement.textContent = '';
-
+  updateDiscountPercentage(1);
   appliedCode.textContent = '';
   appliedCodeContainer.style.display = 'none';
   applyVerifyButton.disabled = false;

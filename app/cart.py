@@ -2,6 +2,7 @@ from flask import render_template, flash
 from flask_login import current_user
 import datetime
 from flask import jsonify
+import decimal
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -10,6 +11,8 @@ from .models.order import Order
 
 from flask import Blueprint, request, redirect, url_for
 bp = Blueprint('cart', __name__)
+
+discount_pct = 1
 
 @bp.route('/cart', methods=['GET'])
 def cart():
@@ -59,6 +62,23 @@ def delete_cart_item(pid):
     except Exception as e:
         return jsonify({'error': 'Unexpected error'}), 500
 
+@bp.route('/process-discount', methods=['POST'])
+def process_discount():
+    global discount_pct
+    try:
+        if current_user.is_authenticated:
+            data = request.get_json()
+            pct = data.get('pct')
+            discount_pct=pct
+            return jsonify({'message': 'Update successful'}), 200
+        else:
+            return jsonify({'error': 'User not authenticated'}), 401
+    except ValueError:
+        return jsonify({'error': 'Invalid percentage value'}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Unexpected error'}), 500
+
 @bp.route('/submit-order', methods=['GET', 'POST'])
 def submit_order():
     try:
@@ -74,7 +94,7 @@ def submit_order():
             for item in all_cart_items:
                 quantity_requested = item[3]
                 unit_price = item[7]
-                total_price += quantity_requested * unit_price
+                total_price += quantity_requested * unit_price * decimal.Decimal(discount_pct)
                 prod_id = item[2]
                 prod_name = item[6]
                 prod_details = Product.get(prod_id) 
@@ -97,16 +117,16 @@ def submit_order():
                 return redirect(url_for('cart.cart'))
             now = datetime.datetime.now()
             order_items = all_cart_items
+            oid = Order.add_order(current_user.id, total_price, len(all_cart_items), now)
             for item in all_cart_items:
                 try:
-                    Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], current_user.order_number, item[9]) 
+                    Cart.submit_cart_item(current_user.id, item[2], now, item[3], item[7], oid, item[9], discount_pct) 
                 except Exception as e:
                     return jsonify({'error': 'Unexpected error'}), 500
-            Order.add_order(current_user.order_number, current_user.id, total_price, len(all_cart_items), now)
+            
         else:
             order_items = None
-        return render_template('orders.html',
-                           order_items=order_items, fulfillment=False)
+        return redirect(url_for('cart.order_detail', oid=oid))
     except Exception as e:
         print(f"Error rendering template: {e}")
         return jsonify({'error': 'Unexpected error'}), 500

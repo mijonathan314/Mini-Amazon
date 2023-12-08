@@ -47,7 +47,7 @@ ORDER BY time_purchased DESC
         return [Purchase(*row) for row in rows]
 
     @staticmethod
-    def get_all_by_oid(uid, oid):
+    def get_all_by_oid(oid, uid):
         rows = app.db.execute('''
 SELECT uid, pid, Purchases.quantity, Purchases.price, Purchases.fulfillment_status, Purchases.time_purchased, Purchases.order_id, Products.name
 FROM Purchases, Products

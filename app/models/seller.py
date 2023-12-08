@@ -80,14 +80,15 @@ class Fulfillment:
 
 
     @staticmethod
-    def get_all_fulfillment_by_user(user_id):
+    def get_all_fulfillment_by_user(user_id): #user_id is the seller
         rows = app.db.execute('''
-SELECT Orders.user_id, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
+SELECT Purchases.uid, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
 FROM Orders, Products, Purchases, Users
 WHERE (
-    Products.user_id = Users.id AND
+    Products.user_id = :user_id AND
     Products.id = Purchases.pid AND
-    Users.id = Orders.user_id
+    Purchases.uid = Users.id AND
+    Orders.id = Purchases.order_id
 )
 ORDER BY Orders.time_stamp DESC
 ''',
