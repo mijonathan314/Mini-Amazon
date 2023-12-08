@@ -55,6 +55,17 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Already a user with this email.')
 
 class UpdateProfileForm(FlaskForm):
+    def __init__(self, firstname_default='', lastname_default='', email_default='', address_default='', *args, **kwargs):
+        super(UpdateProfileForm, self).__init__(*args, **kwargs)
+        if not self.is_submitted():
+            # Set default values only if the form is not submitted
+            self.firstname.data = firstname_default
+            self.lastname.data = lastname_default
+            self.email.data = email_default
+            self.address.data = address_default
+        
+        self.current_email = email_default
+
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -62,8 +73,8 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update Information')
 
     def validate_email(self, email):
-        if User.email_exists(email.data):
-            raise ValidationError('Already a user with this email.')
+        if email.data != self.current_email and User.email_exists(email.data):
+            raise ValidationError(f'Email "{email.data}" is already in use by another user.')
         
 class CurrencyField(DecimalField):
     """
@@ -122,7 +133,12 @@ def register():
 
 @bp.route('/update/<int:uid>', methods=['GET', 'POST'])
 def update(uid):
-    form = UpdateProfileForm()
+    current_user = User.get(uid)
+    form = UpdateProfileForm(
+        firstname_default = current_user.firstname, 
+        lastname_default = current_user.lastname, 
+        email_default = current_user.email, 
+        address_default = current_user.address)
     if form.validate_on_submit():
         if User.update(uid,
                         form.email.data,
