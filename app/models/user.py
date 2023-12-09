@@ -84,6 +84,22 @@ RETURNING id
             return None
 
     @staticmethod
+    def reset_password(id, password):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET password = :password
+WHERE id = :id
+RETURNING id
+""",                              password=generate_password_hash(password),
+                                  id = id)
+            id = rows[0][0]
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""

@@ -77,7 +77,14 @@ class UpdateProfileForm(FlaskForm):
     def validate_email(self, email):
         if email.data != self.current_email and User.email_exists(email.data):
             raise ValidationError(f'Email "{email.data}" is already in use by another user.')
-        
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(),
+                                       EqualTo('password')])
+    submit = SubmitField('Reset Password')
+
 class CurrencyField(DecimalField):
     """
     Very similar to WTForms DecimalField, except with the option of rounding
@@ -149,6 +156,15 @@ def update(uid):
                         form.address.data):
             return redirect(url_for('users.homepage'))
     return render_template('updateProfile.html', title="Update Profile", form=form)
+
+@bp.route('/update/password/<int:uid>', methods=['GET', 'POST'])
+def reset_password(uid):
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        if User.reset_password(uid,
+                        form.password.data):
+            return redirect(url_for('users.homepage'))
+    return render_template('resetPassword.html', title="Reset Password", form=form)
 
 @bp.route('/logout')
 def logout():
