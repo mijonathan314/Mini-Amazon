@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Your Orders</h2>
+<br><br>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Total Amount</th>
+      <th scope="col">Number of Items</th>
+      <th scope="col">Date Purchased</th>
+      <th scope="col">Order Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in order_history%}
+      <tr>
+        <td>{{order.total_price | round(2)}}</td>
+        <td>{{order.total_items}}</td>
+        <td>{{ order.time_stamp.strftime("%b %d, %Y") }}</td>
+        <td>         
+          <a href="{{url_for('cart.order_detail', oid=order.id)}}" class="btn btn-primary">View Details</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

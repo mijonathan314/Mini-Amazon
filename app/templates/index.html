@@ -44,22 +44,33 @@
 <br><br>
 {% if current_user.is_authenticated %}
 <h2>Your recent purchases:</h2>
+<a href="{{ url_for('purchases.get_purchases_by_uid', uid = current_user.id) }}" type="button" class="btn btn-dark">All Purchases</a>
+</br></br>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product ID</th>
-      <th scope="col">Time Purchased</th>
-      <th scope="col">Leave Review Hello</th>
-      
+      <th scope="col">Product Name</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">(Final) Unit Price</th>
+      <th scope="col">(Final) Total Price</th>
+      <th scope="col">Fulfillment Status</th>
+      <th scope="col">Date Purchased</th>
+      <th scope="col">Leave Review</th>
     </tr>
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
+        <td>{{purchase.name}}</td>
+        <td>
+          <a href="{{url_for('users.profile', uid=purchase.user_id)}}" class="btn btn-primary">{{purchase.firstname}} {{purchase.lastname}}</a>
+        </td>
+        <td>{{purchase.quantity}}</td>
+        <td>{{purchase.price}}</td>
+        <td>{{purchase.quantity * purchase.price}}</td>
+        <td>{{purchase.fulfillment_status}} on {{purchase.time_fulfillment_updated.strftime("%b %d, %Y")}}</td>
+        <td>{{purchase.time_purchased.strftime("%b %d, %Y")}}</td>
         <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
       </tr>
     {% endfor %}

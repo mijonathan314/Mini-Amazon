@@ -1,4 +1,6 @@
 import decimal
+
+from .models.reviews import Review
 from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
@@ -159,7 +161,12 @@ def homepage():
 
 @bp.route('/profile/<int:uid>')
 def profile(uid):
-    return render_template('profile.html')
+    user = User.get(uid)
+    if user.seller: 
+        reviews = Review.get_all_by_seller_id_with_product_info(uid)
+    else: 
+        reviews = None
+    return render_template('profile.html', user=user, reviews=reviews)
 
 @bp.route('/balance/<int:uid>')
 def balance(uid):
