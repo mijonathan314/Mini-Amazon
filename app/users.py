@@ -178,11 +178,21 @@ def homepage():
 @bp.route('/profile/<int:uid>')
 def profile(uid):
     user = User.get(uid)
+    reviews = []
+    review_items = []
+    page = None
+    total_pages = None
     if user.seller: 
         reviews = Review.get_all_by_seller_id_with_product_info(uid)
-    else: 
-        reviews = None
-    return render_template('profile.html', user=user, reviews=reviews)
+        page = int(request.args.get('page', 1))
+        items_per_page = 8
+        start_idx = (page - 1) * items_per_page
+        end_idx = page * items_per_page
+        # get the items on the current page
+        review_items = reviews[start_idx:end_idx]
+        total_pages = (len(reviews) + items_per_page - 1) // items_per_page
+    return render_template('profile.html', user=user, reviews_list=review_items, page=page, 
+                           total_pages=total_pages,)
 
 @bp.route('/balance/<int:uid>')
 def balance(uid):

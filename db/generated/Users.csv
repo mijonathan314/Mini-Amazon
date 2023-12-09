@@ -64,9 +64,15 @@ Port Jeanettehaven, DC 34523","False","30","0"
 Lewisside, NC 65143","False","31","0"
 "32","qstark@yahoo.com","pbkdf2:sha256:600000$wllAJXKY3YqJkSOi$cb2d0bfb42330b8b2a6ef543108eb6350bfc9e2655685efca245087041d5cb31","Eric","Taylor","9684 Jacob Forge Suite 828
 Port Carla, WV 70196","False","32","0"
+<<<<<<< HEAD
 "33","waynebarnes@yahoo.com","pbkdf2:sha256:600000$0EDi7IafrSSCQTzn$39f31155e86d9e8454b0683fc71a49837abf1a1005bb1ec694f4a1e170ddfa05","Daniel","Mccall","986 Rebecca Center
 Merrittton, SD 85388","False","33","0"
 "34","vschneider@gmail.com","pbkdf2:sha256:600000$t76s5IG8vfMJzRxQ$466b510a62d3feabadb01b46bac4b0204d139963e1ef9172ecf0d25af2bd98fc","Brian","Kelly","Unit 2166 Box 7052
+=======
+"33","waynebarnes@yahoo.com","pbkdf2:sha256:600000$V4E4yaj3s4GrYrm5$796af8f2f8a5c0d15b03f58f525cd7e6e63e583290a880e0cacffb6d3c91e536","Daniel","Mccall","986 Rebecca Center
+Merrittton, SD 85388","True","33","0"
+"34","vschneider@gmail.com","pbkdf2:sha256:600000$tOoVJDSCLeifqfwx$7c8736c2cb22839df0a62ecb18dc4b6683be7897711d98e7f0587752e794b055","Brian","Kelly","Unit 2166 Box 7052
+>>>>>>> ca20ef1f5d531fffc8c8043f2f99a91709d353a5
 DPO AE 92631","False","34","0"
 "35","ostone@gmail.com","pbkdf2:sha256:600000$DEOfFTAig7lrxtPP$fece161a9cb65bf569a889057b58c6ef30a25e52f0a59aeede67c18fd5b8125e","Abigail","Hoover","7577 Christopher Mill
 Frankside, NJ 72758","False","35","0"
