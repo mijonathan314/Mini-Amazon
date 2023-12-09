@@ -19,7 +19,7 @@ class User(UserMixin):
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, balance, address, order_number
+SELECT password, id, email, firstname, lastname, balance, address, seller, order_number
 FROM Users
 WHERE email = :email
 """,
@@ -80,6 +80,22 @@ RETURNING id
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
+            print(str(e))
+            return None
+
+    @staticmethod
+    def reset_password(id, password):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET password = :password
+WHERE id = :id
+RETURNING id
+""",                              password=generate_password_hash(password),
+                                  id = id)
+            id = rows[0][0]
+            return User.get(id)
+        except Exception as e:
             print(str(e))
             return None
 
