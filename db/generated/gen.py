@@ -5,7 +5,7 @@ from faker import Faker
 
 num_users = 100
 num_products = 2000
-num_purchases = 200
+num_purchases = 2500 #200
 num_cart_items = 30
 num_reviews = 3000
 
@@ -141,7 +141,6 @@ def gen_orders(num_purchases):
         print('generated orders')
     return
 
-
 def gen_purchases(num_purchases, available_pids):
     purchase_dict = {} #dictionary mapping uid to array of pids that the user has purchased
     with open('Purchases.csv', 'w') as f:
@@ -152,18 +151,21 @@ def gen_purchases(num_purchases, available_pids):
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
             pid = fake.random_element(elements=available_pids)
-            #dictionary code added by Kenny 
             if uid not in purchase_dict:
                 toAdd = {pid}
                 purchase_dict[uid] = toAdd
             else:
                 purchase_dict[uid].add(pid)
             quantity = fake.random_int(min=0, max=50)
+            price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, quantity, fulfillment_status, time_purchased])
+            time_fulfillment_updated = fake.date_time()
+            order_id = fake.random_int(min=0, max=num_purchases)
+            writer.writerow([id, uid, pid, quantity, price, fulfillment_status, time_purchased, time_fulfillment_updated, order_id])
         print(f'{num_purchases} generated')
     return purchase_dict
+
 
 
 

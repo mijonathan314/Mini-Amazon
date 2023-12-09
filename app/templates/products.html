@@ -16,11 +16,8 @@
       <th scope="col">Product Name</th>
       <th scope="col">Product Price</th>
       <th scope="col">Product Category</th>
-<<<<<<< HEAD
       <th scope="col">Product Description</th>
-=======
       <th scope="col">Review Summary</th>
->>>>>>> kenny-social
 
     </tr>
   </thead>
@@ -31,12 +28,9 @@
         <td><a href="{{ url_for('product.product_detail', product_id=product.id) }}">{{ product.name }}</a></td>
         <td>{{product.price}}</td>
         <td>{{product.category}}</td>
-<<<<<<< HEAD
         <td>{{product.description}}</td>
-=======
         <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
 
->>>>>>> kenny-social
       </tr>
     {% endfor %}
   </tbody>

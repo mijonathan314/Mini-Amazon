@@ -52,11 +52,15 @@ def send_review_by_uid_pid(uid, pid):
             print(review)
             rating = request.form["rating"]
 
+            print("crisis")
+            print("filename: ", f.filename)
             f = request.files["img"]
-            filepath = os.path.join("app/static",f.filename)
-            f.save(filepath)
-           
-            image_string = "/static/"+str(f.filename)
+            image_string = ""
+            if f.filename != "":
+                filepath = os.path.join("app/static",f.filename)
+                f.save(filepath)
+                image_string = "/static/"+str(f.filename)
+            else: image_string = ""
             print(image_string)
             time_formatted = time.strftime('%Y-%m-%d %H:%M:%S')
             # submit to the database
@@ -71,10 +75,13 @@ def edit_review_by_uid_pid(rid, uid, pid):
         review = request.form["review"]
         rating = request.form["rating"]
         time_formatted = time.strftime('%Y-%m-%d %H:%M:%S')
+        image_string = ""
         f = request.files["img"]
-        filepath = os.path.join("app/static",f.filename)
-        f.save(filepath)
-        image_string = "/static/"+str(f.filename)
+        if f.filename != "":
+            filepath = os.path.join("app/static",f.filename)
+            f.save(filepath)
+            image_string = "/static/"+str(f.filename)
+
         Review_Feedback.delete_all_feedback_by_rid(rid)
         Review.delete_review(uid, pid)
         Review.add_review(uid, pid, time_formatted, rating, 0, 0, image_string, review)
