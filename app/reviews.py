@@ -52,8 +52,7 @@ def send_review_by_uid_pid(uid, pid):
             print(review)
             rating = request.form["rating"]
 
-            print("crisis")
-            print("filename: ", f.filename)
+
             f = request.files["img"]
             image_string = ""
             if f.filename != "":
@@ -116,11 +115,7 @@ def see_prod_reviews(pid):
         top_three_reviews = []
         top_three_review_ids = []
         other_reviews = []
-        # avg_rating = Product.get_avg_rating_by_pid(pid)
-        # num_reviews = Product.get_num_reviews_by_pid(pid)
         review_feedbacks = Review_Feedback.get_all_feedback(current_user.id)
-
-
         avg_rating = 0
         num_reviews = 0
 
