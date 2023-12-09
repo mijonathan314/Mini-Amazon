@@ -65,6 +65,8 @@ def seller(action = None, user_id = None, product_id = None, order_id = None, bu
             UPDATE Purchases
             SET fulfillment_status = :fulfillment_status, time_fulfillment_updated=:now
             WHERE pid = :product_id
+            AND uid =:buyer_id
+            AND order_id =:order_id
             ''', fulfillment_status = request.form['quant'], order_id = order_id, product_id = product_id, buyer_id=buyer_id, now=now)
             return redirect(url_for('inventory.seller'))
 
