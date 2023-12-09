@@ -41,7 +41,8 @@
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Category</th>
-      <th scope="col">Review Summary</th>
+      <th scope="col">Seller Review Summary</th>
+      <th scope="col">Product Review Summary</th>
     </tr>
   </thead>
   <tbody>
@@ -51,6 +52,7 @@
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
         <td>{{product.category}}</td>
+        <td><a type="button" href="{{ url_for('seller_reviews.see_seller_reviews', pid = product.id) }}">Review Summary</a></td>
         <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
       </tr>
     {% endfor %}
@@ -73,6 +75,7 @@
       <th scope="col">Fulfillment Status</th>
       <th scope="col">Date Purchased</th>
       <th scope="col">Leave Review</th>
+      <th scope="col">Leave Seller Review</th>
     </tr>
   </thead>
   <tbody>
@@ -88,6 +91,7 @@
         <td>{{purchase.fulfillment_status}} on {{purchase.time_fulfillment_updated.strftime("%b %d, %Y")}}</td>
         <td>{{purchase.time_purchased.strftime("%b %d, %Y")}}</td>
         <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
+        <td><a type="button" href="{{ url_for('seller_reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
       </tr>
     {% endfor %}
   </tbody>

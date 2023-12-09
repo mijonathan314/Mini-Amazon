@@ -8,6 +8,7 @@ num_products = 2000
 num_purchases = 2500 #200
 num_cart_items = 30
 num_reviews = 3000
+num_seller_reviews = 1000
 
 Faker.seed(0)
 fake = Faker()
@@ -39,7 +40,7 @@ def gen_users(num_users):
         print(f'{num_users} generated')
     return
 
-
+product_dict = {} #maps product id to seller id (user)
 
 def gen_products(num_products):
     available_pids = []
@@ -50,6 +51,7 @@ def gen_products(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
+            product_dict[pid] = uid
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             quantity = fake.random_int(min=1, max=1000)
@@ -125,6 +127,35 @@ def gen_review_feedback():
         print(feedback_dict)
         print('feedback_review generated')
         return feedback_dict
+    
+
+    
+def gen_seller_reviews(num_seller_reviews):
+    repeats = {} #maps buyer:seller
+    with open('Seller_Reviews.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Seller_Reviews...', end=' ', flush=True)
+        for rid in range(num_seller_reviews):
+            print("rid", rid)
+            helper(writer, rid, repeats)
+            
+
+def helper(writer, rid, repeats):
+    for pid, buyers in buyer_dict.items():
+        for buyer in buyers:
+            seller = product_dict[pid]
+            if f"{buyer}:{seller}" in repeats:
+                continue
+            chance = random.randint(0, 10)
+            if chance == 1:
+                time_reviewed = fake.date_time()
+                review = fake.sentence(nb_words=8)
+                rating = fake.random_int(min=1, max=5)
+                writer.writerow([rid, buyer, seller, time_reviewed, rating, review])
+                repeats[f"{buyer}:{seller}"] = 1
+                return
+                
+                        
             
 
 def gen_orders(num_purchases):
@@ -141,6 +172,8 @@ def gen_orders(num_purchases):
         print('generated orders')
     return
 
+buyer_dict = {} #product mapped to set of buyers who bought it
+
 def gen_purchases(num_purchases, available_pids):
     purchase_dict = {} #dictionary mapping uid to array of pids that the user has purchased
     with open('Purchases.csv', 'w') as f:
@@ -156,6 +189,10 @@ def gen_purchases(num_purchases, available_pids):
                 purchase_dict[uid] = toAdd
             else:
                 purchase_dict[uid].add(pid)
+            if pid not in buyer_dict:
+                buyer_dict[pid] = {uid}
+            else:
+                buyer_dict[pid].add(uid)
             quantity = fake.random_int(min=0, max=50)
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
@@ -197,5 +234,7 @@ gen_cart_items(num_cart_items, available_pids)
 #assign purchases/products to data structure and then use those to 
 #make sure your reviews are fulfilling constraints
 feedback_dict = gen_review_feedback()
-gen_reviews(num_reviews, purchase_dict, feedback_dict)
+gen_seller_reviews(num_seller_reviews)
+gen_reviews(num_reviews, purchase_dict, feedback_dict) #don't add stuff after this function
+
 

@@ -44,6 +44,7 @@
       <th scope="col">(Final) Total Price</th>
       <th scope="col">Fulfillment Status</th>
       <th scope="col">Date Purchased</th>
+      <th scope="col">Leave Seller Review</th>
       <th scope="col">Leave Review</th>
     </tr>
   </thead>
@@ -60,6 +61,7 @@
         <td>{{purchase.quantity * purchase.price}}</td>
         <td>{{purchase.fulfillment_status}} on {{purchase.time_fulfillment_updated.strftime("%b %d, %Y")}}</td>
         <td>{{purchase.time_purchased.strftime("%b %d, %Y")}}</td>
+        <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
         <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
       </tr>
     {% endfor %}

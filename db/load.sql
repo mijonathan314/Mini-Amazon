@@ -29,3 +29,8 @@ SELECT pg_catalog.setval('public.reviews_id_seq',
                          false);
 
 \COPY Review_Feedback FROM 'Review_Feedback.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY Seller_Reviews FROM 'Seller_Reviews.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.seller_reviews_id_seq',
+                         (SELECT MAX(id)+1 FROM Seller_Reviews),
+                         false);

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Your Seller Reviews</h2>
+<br><br>
+<table id="reviewsTable" class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Review</th>
+      <th scope="col">Rating</th>
+      <th scope="col">Date</th>
+      <th scope="col">Edit Review</th>
+      <th scope="col">Delete Review</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in seller_review_history%}
+      <tr>
+        <td>{{review.sid}}</td>
+        <td>{{review.review}}</td>
+        <td>{{review.review_rating}}</td>
+        <td>{{review.review_time}}</td>
+        <td><a type="button" href="{{ url_for('seller_reviews.init_edit_seller_review_by_uid_sid', rid = review.id, uid=current_user.id, sid=review.sid) }}">Edit Review</a></td>
+        <td><a type="button" href="{{ url_for('seller_reviews.delete_seller_review_by_uid_pid', rid = review.id) }}">Delete Review</a></td>  
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

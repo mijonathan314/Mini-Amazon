@@ -8,8 +8,8 @@ class Seller_Review:
         self.uid = uid
         self.sid = sid
         self.review_time = review_time
-        self.review = review
         self.review_rating = review_rating
+        self.review = review
         #self.review_image = review_image
 
     @staticmethod
@@ -33,7 +33,7 @@ class Seller_Review:
             SELECT *
             FROM Seller_Reviews
             WHERE uid=:uid
-            AND sid=:sid
+            AND seller_id=:sid
             ''',
             uid=uid,
             sid=sid
@@ -60,12 +60,12 @@ class Seller_Review:
             '''
             SELECT *
             FROM Seller_Reviews
-            WHERE sid=:sid
+            WHERE seller_id=:sid
             ORDER BY review_time DESC
             ''',
             sid = sid
         )
-        return [Review(*row) for row in rows]
+        return [Seller_Review(*row) for row in rows]
     
     @staticmethod
     def find_seller_by_product(id):
@@ -77,7 +77,7 @@ class Seller_Review:
             ''',
             id=id
         )
-        return [Seller_Review(*row) for row in rows]
+        return rows[0]
     
     @staticmethod
     def get_all_by_pid_order_by_likes(sid):
@@ -97,19 +97,17 @@ class Seller_Review:
         pass
     
     @staticmethod
-    def add_review(uid, sid, time, rating, thumbs_up, thumbs_down, review):
+    def add_review(uid, sid, time, rating, review):
         # Convert image data to hexadecimal string
         #img_hex = binascii.hexlify(img).decode('utf-8') if img else None
 
         app.db.execute(
-            '''INSERT INTO Seller_Reviews (buyer_id, sid, review_time, rating, thumbs_up, thumbs_down, review) 
-            VALUES (:uid, :sid, :time, :rating, :thumbs_up, :thumbs_down, :review)''',
+            '''INSERT INTO Seller_Reviews (buyer_id, seller_id, review_time, rating, review) 
+            VALUES (:uid, :sid, :time, :rating, :review)''',
             uid=uid,
             sid=sid,
             time=time,
             rating=rating,
-            thumbs_up=thumbs_up,
-            thumbs_down=thumbs_down,  
             review=review
         )
 
@@ -136,14 +134,12 @@ class Seller_Review:
         #change your review
         pass
 
-    def delete_review(uid, sid):
+    def delete_review(rid):
         #TODO delete existing review
-        rows = app.db.execute (
+        app.db.execute (
             '''DELETE FROM Seller_Reviews 
-            WHERE buyer_id = :uid
-            AND sid=sid''',
-            uid=uid,
-            sid=sid
+            WHERE id=:rid''',
+            rid=rid
         )
 
     def update_feedback(id, thumbs_up, thumbs_down):
