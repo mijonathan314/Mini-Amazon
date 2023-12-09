@@ -39,13 +39,17 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_all_by_uid(uid):
         rows = app.db.execute('''
-SELECT *
-FROM Purchases
+SELECT Products.name, Purchases.price, Purchases.quantity, Purchases.fulfillment_status, 
+    Purchases.time_purchased, Purchases.time_fulfillment_updated, Products.user_id, 
+    Users.firstname, Users.lastname, Purchases.pid, Purchases.id
+FROM Purchases, Products, Users
 WHERE uid = :uid
+AND Products.user_id = Users.id
+AND Products.id = Purchases.pid
 ORDER BY time_purchased DESC
 ''',
                               uid=uid)
-        return [Purchase(*row) for row in rows]
+        return rows #[Purchase(*row) for row in rows]
 
     @staticmethod
     def get_all_by_oid(oid, uid):

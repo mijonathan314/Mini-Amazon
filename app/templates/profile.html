@@ -4,10 +4,40 @@
 
 <br><br>
 
-<h1>{{current_user.firstname}} {{current_user.lastname}}</h1><br/>
-<p style="font-size:18px"><b>Account Number: </b> {{current_user.id}}</p>
-<p style="font-size:18px"><b>Email: </b> {{current_user.email}}</p>
-<p style="font-size:18px"><b>Address: </b> {{current_user.address}}</p>
+<h1>{{user.firstname}} {{user.lastname}}</h1><br/>
+<p style="font-size:18px"><b>Account Number: </b> {{user.id}}</p>
+<p style="font-size:18px"><b>Email: </b> {{user.email}}</p>
+<p style="font-size:18px"><b>Address: </b> {{user.address}}</p>
+{% if current_user.id == user.id %}
 <br/><br/><br/>
 <a href="{{ url_for('users.update', uid = current_user.id) }}" type="button" class="btn btn-dark">Update Information</a>
+{% endif %}
+{% if user.seller == True %}
+</br></br><br/><br/>
+{% if current_user.id == user.id %}
+<h5><b>Reviews on the Products You Are Selling</b></h5>
+{% else %}
+<h5><b>Reviews on this Seller's Products</b></h5>
+{% endif %}
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review</th>
+        <th scope="col">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for review in reviews %}
+        <tr>
+          <td>{{review.name}}</td>
+          <td>{{review.rating}}</td>
+          <td>{{review.review}}</td>
+          <td>{{review.review_time.strftime("%b %d, %Y")}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock %}

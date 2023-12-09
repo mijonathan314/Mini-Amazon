@@ -6,27 +6,32 @@
 
 <h2>Your Purchases</h2>
 <br><br>
-<!--TODO: Get the search bar to work-->
-<input type="text" id="searchInput" placeholder="Search all purchases">
-<br><br>
-<table id="purchasesTable" class='table table-hover table-bordered container'>
+<table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Total Amount</th>
-      <th scope="col">Number of Items</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">(Final) Unit Price</th>
+      <th scope="col">(Final) Total Price</th>
+      <th scope="col">Fulfillment Status</th>
       <th scope="col">Date Purchased</th>
-      <th scope="col">Order Details</th>
+      <th scope="col">Leave Review</th>
     </tr>
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
-        <td>{{purchase.total_price | round(2)}}</td>
-        <td>{{purchase.total_items}}</td>
-        <td>{{ purchase.time_stamp.strftime("%b %d, %Y") }}</td>
-        <td>         
-          <a href="{{url_for('cart.order_detail', oid=purchase.id)}}" class="btn btn-primary">View Details</a>
+        <td>{{purchase.name}}</td>
+        <td>
+          <a href="{{url_for('users.profile', uid=purchase.user_id)}}" class="btn btn-primary">{{purchase.firstname}} {{purchase.lastname}}</a>
         </td>
+        <td>{{purchase.quantity}}</td>
+        <td>{{purchase.price}}</td>
+        <td>{{purchase.quantity * purchase.price}}</td>
+        <td>{{purchase.fulfillment_status}} on {{purchase.time_fulfillment_updated.strftime("%b %d, %Y")}}</td>
+        <td>{{purchase.time_purchased.strftime("%b %d, %Y")}}</td>
+        <td><a type="button" href="{{ url_for('reviews.leave_review_by_uid_pid', uid = current_user.id, pid = purchase.pid) }}">Leave Review</a></td>
       </tr>
     {% endfor %}
   </tbody>

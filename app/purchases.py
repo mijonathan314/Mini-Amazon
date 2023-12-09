@@ -9,12 +9,20 @@ from flask import Blueprint
 bp = Blueprint('purchases', __name__)
 
 
-@bp.route('/purchases/<int:uid>', methods=['GET'])
-def get_purchases_by_uid(uid):
-    # find the products the user has purchased given uid
+@bp.route('/orders/<int:uid>', methods=['GET'])
+def get_orders_by_uid(uid):
+    # find the orders the user has purchased given uid
     if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid(uid)
         orders = Order.get_by_uid(uid)
     else:
+        orders = None
+    return render_template('orderHistory.html', order_history=orders)
+
+@bp.route('/purchases/<int:uid>', methods=['GET'])
+def get_purchases_by_uid(uid):
+    # find the purchases the user has purchased given uid
+    if current_user.is_authenticated:
+        purchases = Purchase.get_all_by_uid(uid)
+    else:
         purchases = None
-    return render_template('purchases.html', purchase_history=orders)
+    return render_template('purchases.html', purchase_history=purchases)

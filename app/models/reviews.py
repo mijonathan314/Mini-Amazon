@@ -24,6 +24,20 @@ class Review:
         )
         return [Review(*row) for row in rows]
     
+    @staticmethod
+    def get_all_by_seller_id_with_product_info(uid):
+        rows = app.db.execute (
+            '''
+            SELECT Reviews.review_time, Reviews.rating, Reviews.review, Products.name
+            FROM Reviews, Products
+            WHERE Reviews.product_id = Products.id
+            AND Products.user_id = :uid
+            ORDER BY review_time DESC
+            ''',
+            uid=uid
+        )
+        return rows
+    
     def get_review(uid, pid):
         # TODO
         pass
