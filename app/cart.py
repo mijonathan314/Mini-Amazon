@@ -34,6 +34,7 @@ def cart():
         cart_items = None
         page = None
         total_pages = None
+        total_price = None
 
     return render_template('cart.html',
                            cart_items=cart_items, page=page, total_pages=total_pages, total_price=total_price)
