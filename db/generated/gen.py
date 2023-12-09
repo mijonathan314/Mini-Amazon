@@ -4,8 +4,8 @@ import csv
 from faker import Faker
 
 num_users = 100
-num_products = 2000
-num_purchases = 2500 #200
+num_products = 1000
+num_purchases = 750
 num_cart_items = 30
 num_reviews = 3000
 num_seller_reviews = 1000

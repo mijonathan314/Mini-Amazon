@@ -39,29 +39,30 @@ class Sales:
 SELECT COUNT(DISTINCT Orders.id) AS num_orders
 FROM Orders, Products, Purchases, Users
 WHERE (
-    Products.user_id = Users.id AND
+    Products.user_id = :user_id AND
     Products.id = Purchases.pid AND
-    Users.id = Orders.user_id                    
+    Purchases.uid = Users.id AND
+    Orders.id = Purchases.order_id                    
 )
                               ''',
                               user_id = user_id)
         return [Sales(*row) for row in rows] 
 class Popular:
-    def __init__(self, user_id, name):
-        self.user_id = user_id
+    def __init__(self, name):
         self.name = name  
 
     @staticmethod
     def get_most_popular_by_user(user_id):
         rows = app.db.execute('''
-SELECT Users.id, Products.name
+SELECT  Products.name
 FROM Orders, Products, Purchases, Users
 WHERE (
-    Products.user_id = Users.id AND
+    Products.user_id = :user_id AND
     Products.id = Purchases.pid AND
-    Users.id = Orders.user_id                    
+    Purchases.uid = Users.id AND
+    Orders.id = Purchases.order_id                  
 )
-GROUP BY Users.id, Products.name
+GROUP BY  Products.name
 ORDER BY COUNT(*) DESC
 LIMIT 1
                               ''',
@@ -82,7 +83,7 @@ class Fulfillment:
     @staticmethod
     def get_all_fulfillment_by_user(user_id):
         rows = app.db.execute('''
-SELECT Orders.user_id, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
+SELECT Purchases.uid, Orders.id, Users.address, Products.name, Purchases.fulfillment_status, Orders.time_stamp, Orders.total_items, Products.id
 FROM Orders, Products, Purchases, Users
 WHERE (
     Products.user_id = :user_id AND
