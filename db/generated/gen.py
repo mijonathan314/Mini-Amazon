@@ -33,7 +33,7 @@ def gen_users(num_users):
             firstname = name_components[0]
             lastname = name_components[-1]
             address = profile['address']
-            seller = False
+            seller = False if uid % 2 == 0 else True
             balance = uid
             order_number = 0
             writer.writerow([uid, email, password, firstname, lastname, address, seller, balance, order_number])
@@ -179,7 +179,7 @@ def gen_purchases(num_purchases, available_pids):
     with open('Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
-        for id in range(num_purchases):
+        for id in range(num_purchases, num_purchases*2):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
@@ -198,7 +198,7 @@ def gen_purchases(num_purchases, available_pids):
             fulfillment_status = fake.random_element(elements=('ordered', 'shipped', 'delivered'))
             time_purchased = fake.date_time()
             time_fulfillment_updated = fake.date_time()
-            order_id = fake.random_int(min=0, max=num_purchases)
+            order_id = id
             writer.writerow([id, uid, pid, quantity, price, fulfillment_status, time_purchased, time_fulfillment_updated, order_id])
         print(f'{num_purchases} generated')
     return purchase_dict
