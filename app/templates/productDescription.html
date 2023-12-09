@@ -4,9 +4,34 @@
 
 <br><br>
 
-<h1>{{ product.name }}</h1>
+<h2>Product Details</h2>
+<br><br>
+<table class="table table-hover table-bordered container">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Product Price</th>
+      <th scope="col">Product Category</th>
+      <th scope="col">Product Description</th>
+      <th scope="col">Review Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.description }}</td>
+      <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
+    </tr>
+  </tbody>
+</table>
 
-<!-- You can add more product details here if needed -->
+<div style="text-align: center;">
+    <img src="{{ url_for('static', filename='images/ice cream.jpeg') }}" alt="Image" style="max-width: 100%; height: auto;">
+</div>
 
 <h2>Sellers:</h2>
 <table class="table table-hover table-bordered container">

@@ -66,6 +66,18 @@ WHERE available = :available
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_top_products_by_quantity(k):
+        rows = app.db.execute('''
+    SELECT id, name, price, quantity, available, category, description
+    FROM Products
+    WHERE available = True
+    ORDER BY quantity DESC
+    LIMIT :k
+    ''',
+                        k=k)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
     def get_product_sellers(product_id):
         rows = app.db.execute('''
     SELECT Users.id, Users.firstname, Products.quantity
@@ -75,3 +87,22 @@ WHERE available = :available
     ''',
                             product_id=product_id)
         return rows
+
+    @staticmethod
+    def add_new_product(name, price, quantity, category, description, user_id):
+        try:
+            rows = app.db.execute("""
+    INSERT INTO Products(name, price, quantity, category, description, user_id)
+    VALUES(:name, :price, :quantity, :category, :description, :user_id)
+    RETURNING id
+    """,
+                                    name=name,
+                                    price=price,
+                                    quantity=quantity,
+                                    category=category,
+                                    description=description,
+                                    user_id=user_id)
+            return rows[0][0]  # Returns the new product ID
+        except Exception as e:
+            print(str(e))
+            return None
