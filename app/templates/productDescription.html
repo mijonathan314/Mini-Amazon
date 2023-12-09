@@ -1,13 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
 <h1>{{ product.name }}</h1>
 
 <!-- You can add more product details here if needed -->
 
 <h2>Sellers:</h2>
-<table class="table">
-    <thead>
+<table class="table table-hover table-bordered container">
+    <thead class="thead-dark">
         <tr>
             <th>Seller Name</th>
             <th>Quantity in Stock</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +22,15 @@
         <tr>
             <td>{{ seller.firstname }}</td>
             <td>{{ seller.quantity }}</td>
+            <td>
+                <form action="{{ url_for('product.add_to_cart', product_id=product.id, seller_id=seller.id) }}" method="post">
+                    <input type="number" name="quantity" min="1" max="{{ seller.quantity }}" required>
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{% endblock %}

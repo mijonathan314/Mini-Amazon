@@ -7,7 +7,7 @@
 <h2>Products for sale:</h2>
 <form action="{{ url_for('product.get_top_products') }}" method="post">
   <label for="k-input">Number of top products:</label>
-  <input type="number" id="k-input" name="k-value" min="1" required>
+  <input type="number" id="k-input" name="k-value" placeholder="Enter number" min="1" required>
   <input type="submit" value="View Top K Products">
 </form>
 <br>
@@ -19,6 +19,13 @@
 </form>
 <br>
 
+<form action="{{ url_for('product.get_by_keyword') }}" method="post">
+  <label for="keyword-input">Filter by keyword:</label>
+  <input type="text" id="keyword-input" name="keyword" placeholder="Enter keyword" required>
+  <input type="submit" value="Filter">
+</form>
+<br>
+
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -26,6 +33,7 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Category</th>
       <th scope="col">Review Summary</th>
     </tr>
   </thead>
@@ -35,6 +43,7 @@
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+        <td>{{product.category}}</td>
         <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
       </tr>
     {% endfor %}

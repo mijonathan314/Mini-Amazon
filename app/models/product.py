@@ -54,6 +54,18 @@ WHERE available = :available
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_by_name_keyword(keyword, available=True):
+        # New method to filter products by a keyword in the product name
+        keyword_pattern = f'%{keyword}%'  # Prepares the keyword for pattern matching
+        rows = app.db.execute('''
+    SELECT id, name, price, available, quantity, category, description
+    FROM Products
+    WHERE name LIKE :keyword AND available = :available
+    ''',
+                          keyword=keyword_pattern, available=available)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
     def get_product_sellers(product_id):
         rows = app.db.execute('''
     SELECT Users.id, Users.firstname, Products.quantity
