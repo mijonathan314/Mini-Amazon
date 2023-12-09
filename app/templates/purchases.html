@@ -37,6 +37,7 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
+      <th scope="col">Product ID</th>
       <th scope="col">Seller</th>
       <th scope="col">Quantity</th>
       <th scope="col">Category</th>
@@ -52,6 +53,7 @@
     {% for purchase in purchase_history%}
       <tr>
         <td>{{purchase.name}}</td>
+        <td>{{purchase.pid}}</td>
         <td>
           <a href="{{url_for('users.profile', uid=purchase.user_id)}}" class="btn btn-primary">{{purchase.firstname}} {{purchase.lastname}}</a>
         </td>

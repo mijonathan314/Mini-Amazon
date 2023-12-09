@@ -41,7 +41,7 @@ ORDER BY time_purchased DESC
         rows = app.db.execute('''
 SELECT Products.name, Purchases.price, Purchases.quantity, Purchases.fulfillment_status, 
     Purchases.time_purchased, Purchases.time_fulfillment_updated, Products.user_id, 
-    Users.firstname, Users.lastname, Purchases.pid, Purchases.id, Products.category
+    Users.firstname, Users.lastname, Purchases.pid, Purchases.id, Products.category, Products.id AS product_id
 FROM Purchases, Products, Users
 WHERE uid = :uid
 AND Products.user_id = Users.id

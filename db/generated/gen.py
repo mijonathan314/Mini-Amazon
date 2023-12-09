@@ -4,8 +4,8 @@ import csv
 from faker import Faker
 
 num_users = 100
-num_products = 1000
-num_purchases = 750
+num_products = 1250
+num_purchases = 1250
 num_cart_items = 30
 num_reviews = 3000
 num_seller_reviews = 1000
@@ -33,7 +33,7 @@ def gen_users(num_users):
             firstname = name_components[0]
             lastname = name_components[-1]
             address = profile['address']
-            seller = False
+            seller = False if uid % 2 == 0 else True
             balance = uid
             order_number = 0
             writer.writerow([uid, email, password, firstname, lastname, address, seller, balance, order_number])
