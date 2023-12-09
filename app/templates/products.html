@@ -6,9 +6,11 @@
 
 <h2>Products</h2>
 <br><br>
-<!--TODO: Get the search bar to work-->
+<!-- Search Bar -->
 <input type="text" id="searchInput" placeholder="Search all products">
 <br><br>
+
+<!-- Products Table -->
 <table id="productsTable" class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -18,21 +20,36 @@
       <th scope="col">Product Category</th>
       <th scope="col">Product Description</th>
       <th scope="col">Review Summary</th>
-
     </tr>
   </thead>
   <tbody>
-    {% for product in top_product%}
+    {% for product in top_product %}
       <tr>
-        <td>{{product.id}}</td>
+        <td>{{ product.id }}</td>
         <td><a href="{{ url_for('product.product_detail', product_id=product.id) }}">{{ product.name }}</a></td>
-        <td>{{product.price}}</td>
-        <td>{{product.category}}</td>
-        <td>{{product.description}}</td>
-        <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid = product.id) }}">Review Summary</a></td>
-
+        <td>{{ product.price }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.description }}</td>
+        <td><a type="button" href="{{ url_for('reviews.see_prod_reviews', pid=product.id) }}">Review Summary</a></td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Create New Product Form -->
+{% if current_user.is_authenticated %}
+<br>
+<h2>Create a New Product</h2>
+<form action="{{ url_for('product.create_product') }}" method="post">
+  <input type="text" name="name" placeholder="Product Name" required>
+  <input type="number" name="price" placeholder="Price" min="0" required>
+  <input type="number" name="quantity" placeholder="Quantity" min="0" required>
+  <input type="text" name="category" placeholder="Category" required>
+  <input type="text" name="Description" placeholder="Description" required>
+
+  <input type="submit" value="Create Product">
+</form>
+<br>
+{% endif %}
+
 {% endblock %}

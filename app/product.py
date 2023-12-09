@@ -6,7 +6,7 @@ from flask import jsonify, request
 from .models.product import Product
 from .models.cart import Cart
 
-from flask import Blueprint
+from flask import Blueprint, redirect, url_for
 bp = Blueprint('product', __name__)
 
 
@@ -17,21 +17,17 @@ def get_top_products():
     else:
         k = 0  # Default value if no input provided
 
-    if current_user.is_authenticated:
-        products = Product.get_top_expensive_products(k)
-    else:
-        products = None
+    
+    products = Product.get_top_expensive_products(k)
+    
 
     return render_template('products.html', top_product=products)
 
 @bp.route('/get_by_category', methods=['POST'])
 def get_by_category():
     category = request.form['category'].strip()  # Get the category from the form input
-    if current_user.is_authenticated and category:
-        # Call a method to get products by category, you need to implement it in the Product model
-        filtered_products = Product.get_by_category(category)
-    else:
-        filtered_products = []
+    
+    filtered_products = Product.get_by_category(category)
 
     # Render the same products page or a specific category page with the filtered products
     return render_template('products.html', top_product=filtered_products)
@@ -39,14 +35,18 @@ def get_by_category():
 @bp.route('/get_by_keyword', methods=['POST'])
 def get_by_keyword():
     keyword = request.form['keyword'].strip()  # Get the keyword from the form input
-    if current_user.is_authenticated and keyword:
-        # Call a method to get products by the keyword in the product name
-        filtered_products = Product.get_by_name_keyword(keyword)
-    else:
-        filtered_products = []
+    
+    filtered_products = Product.get_by_name_keyword(keyword)
+    
 
     # Render the same products page with the filtered products
     return render_template('products.html', top_product=filtered_products)
+
+@bp.route('/get_by_quantity', methods=['POST'])
+def get_by_quantity():
+    k = int(request.form.get('k-value', 0))  # Get the value of k from the form
+    products = Product.get_top_products_by_quantity(k)
+    return render_template('products.html', top_product=products)
 
 
 @bp.route('/product/<int:product_id>')
@@ -78,8 +78,28 @@ def add_to_cart(product_id, seller_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500 
 
+@bp.route('/create-product', methods=['POST'])
+def create_product():
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'User not authenticated'}), 401
 
+    try:
+        name = request.form.get('name')
+        price = float(request.form.get('price'))
+        quantity = int(request.form.get('quantity'))
+        category = request.form.get('category')
+        description = request.form.get('description')
 
+        new_product_id = Product.add_new_product(name, price, quantity, category, description, current_user.id)
+
+        
+        # Fetch updated list of products
+        products = Product.get_all(available=True)
+        return render_template('products.html', top_product=products)
+
+    except Exception as e:
+        products = Product.get_all(available=True)
+        return render_template('products.html', top_product=products)
 
 
 
