@@ -6,20 +6,19 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname, balance, address, order_number, seller):
+    def __init__(self, id, email, firstname, lastname, balance, address, seller):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
         self.balance = balance
         self.address = address
-        self.order_number = order_number
         self.seller = seller
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, balance, address, seller, order_number
+SELECT password, id, email, firstname, lastname, balance, address, seller
 FROM Users
 WHERE email = :email
 """,
@@ -46,15 +45,14 @@ WHERE email = :email
     def register(email, password, firstname, lastname, address):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname, balance, address, order_number)
-VALUES(:email, :password, :firstname, :lastname, :balance, :address, :order_number)
+INSERT INTO Users(email, password, firstname, lastname, balance, address)
+VALUES(:email, :password, :firstname, :lastname, :balance, :address)
 RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname, lastname=lastname, 
-                                  balance = 0.00, address = address,
-                                  order_number=0)
+                                  balance = 0.00, address = address)
             id = rows[0][0]
             return User.get(id)
         except Exception as e:
@@ -103,7 +101,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, balance, address, order_number, seller
+SELECT id, email, firstname, lastname, balance, address, seller
 FROM Users
 WHERE id = :id
 """,
